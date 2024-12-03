@@ -1,5 +1,20 @@
+import { useState } from "react"
 
 export default function TablaPartidas() {
+
+    const [data, setData] = useState([
+            {id: 1, avatar: "🦊", nick: "FoxPlayer", puntos: 1500, fecha: "2024-11-30"},
+            {id: 2, avatar: "🐼", nick: "PandaMaster", puntos: 2200, fecha: "2024-12-01"},
+            {id: 3, avatar: "🦁", nick: "LionKing", puntos: 1800, fecha: "2024-12-02"},
+            {id: 4, avatar: "🐯", nick: "TigerStripe", puntos: 2000, fecha: "2024-12-02"},
+            {id: 5, avatar: "🐸", nick: "FrogJumper", puntos: 1700, fecha: "2024-12-03"}
+        ]
+    )
+
+    console.log(data)
+
+
+
     return (
         <div id="partidas" className="m-5 p-5 bg-dark container border-danger">
             <h2 className="text-center text-light">Partidas</h2>
@@ -11,35 +26,24 @@ export default function TablaPartidas() {
             </div>
             <table className="table table-dark">
                 <thead>
-                    
-                </thead>
-                <tbody>
                     <tr>
-                        <td></td>
+                        <td>Avatar</td>
                         <td>Nick <i className="bi bi-arrow-up-square"></i></td>
                         <td>Puntuación <i className="bi bi-arrow-up-square"></i></td>
                         <td>Fecha <i className="bi bi-arrow-up-square"></i></td>
                     </tr>
-                
-                </tbody><tbody>
-                    <tr>
-                        <td><img src="" alt="avatar"/></td>
-                        <td>ANDER</td>
-                        <td>10</td>
-                        <td>13 ABRIL 2023</td>
-                    </tr>
-                    <tr>
-                        <td><img src="" alt="avatar"/></td>
-                        <td>ANDER</td>
-                        <td>600</td>
-                        <td>13 FEBRERO 2023</td>
-                    </tr>
-                    <tr>
-                        <td><img src="" alt="avatar"/></td>
-                        <td>ANDER</td>
-                        <td>888</td>
-                        <td>1 ENERO 2023</td>
-                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        data.map((partida)=> 
+                            <tr key={partida.id}>
+                                <td>{partida.avatar}</td>
+                                <td>{partida.nick}</td>
+                                <td>{partida.puntos}</td>
+                                <td>{partida.fecha}</td>
+                            </tr>
+                        )
+                    }
                 </tbody>
                 <tfoot></tfoot>
             </table>
