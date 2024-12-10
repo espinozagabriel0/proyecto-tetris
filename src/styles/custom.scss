@@ -1,7 +1,17 @@
 #root{
   max-width: 1280px;
   margin: 0 auto;
+  font-size: 19px;
 }
 body{
   font-family: "VT323", monospace;
+  background: url("/public/img/fondo.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  // background-attachment: scroll;
+  min-height: 100vh;
+}
+
+thead td{
+  cursor: pointer;
 }
