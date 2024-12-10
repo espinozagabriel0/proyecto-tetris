@@ -59,7 +59,7 @@ export default function TablaPartidas() {
 
 
     return (
-        <div id="partidas" className="p-5 bg-dark container border-danger w-100">
+        <div id="partidas" className="p-5 bg-dark container w-100 my-4">
             <h2 className="text-center text-light">Partidas</h2>
             <div className="input-group mb-3">
                 <input type="text" className="form-control" placeholder="Buscador" aria-label="Buscador" aria-describedby="button-addon2" />
