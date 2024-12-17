@@ -13,7 +13,16 @@ export default function VentanaModal({data, setData}) {
 
         //añadir la partida al array con setData
         const nuevaPartida = {id: data.length +1, avatar: avatar, nick: nick, puntos: puntuacion, fecha: fecha}
-        setData([...data], nuevaPartida)
+        setData([...data, nuevaPartida])
+
+        limpiarInputs()
+    }
+
+    const limpiarInputs = () => {
+        setAvatar("")
+        setNick("")
+        setPuntuacion("")
+        setFecha("")
     }
 
     return (
@@ -28,19 +37,19 @@ export default function VentanaModal({data, setData}) {
                     <form>
                         <div className="mb-3">
                             <label htmlFor="avatar" className="col-form-label">Avatar:</label>
-                            <input type="text" className="form-control" id="avatar" onChange={(e) => setAvatar(e.target.value)} />
+                            <input type="text" className="form-control" id="avatar" onChange={(e) => setAvatar(e.target.value)} value={avatar} />
                         </div>
                         <div className="mb-3">
                             <label htmlFor="nick" className="col-form-label">Nick:</label>
-                            <input type="text" className="form-control" id="nick" onChange={(e) => setNick(e.target.value)}/>
+                            <input type="text" className="form-control" id="nick" onChange={(e) => setNick(e.target.value)} value={nick}/>
                         </div>
                         <div className="mb-3">
                             <label htmlFor="puntos" className="col-form-label">Puntuación:</label>
-                            <input type="number" className="form-control" id="puntos" onChange={(e) => setPuntuacion(e.target.value)}/>
+                            <input type="number" className="form-control" id="puntos" onChange={(e) => setPuntuacion(e.target.value)} value={puntuacion}/>
                         </div>
                         <div className="mb-3">
                             <label htmlFor="fecha" className="col-form-label">Fecha:</label>
-                            <input type="date" className="form-control" id="fecha" onChange={(e) => setFecha(e.target.value)}/>
+                            <input type="date" className="form-control" id="fecha" onChange={(e) => setFecha(e.target.value)} value={fecha}/>
                         </div>
                     </form>
                 </div>
