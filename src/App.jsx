@@ -1,4 +1,5 @@
 import Inicio from './components/Inicio'
+import Juego from './components/Juego'
 import TablaPartidas from './components/TablaPartidas'
 import VentanaModal from './components/VentanaModal'
 import { useState } from "react"
@@ -36,7 +37,7 @@ function App() {
         setData={setData}
       />
 
-  
+      <Juego/>
     </div>
   )
 }

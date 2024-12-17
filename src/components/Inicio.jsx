@@ -15,8 +15,6 @@ export default function Inicio() {
                 Al final de la partida podràs desar la teva puntuació, i veure el ranking de jugadors
             </p>
         </div>
-
-
     </div>
   )
 }
