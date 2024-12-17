@@ -1,7 +1,7 @@
 
 export default function InicioVista() {
   return (
-    <div className="text-white rounded p-2 text-center" style={{fontSize: "1.4rem"}}>
+    <section className="text-white rounded p-2 text-center border vista" style={{fontSize: "1.4rem"}}>
         Tetris és un videojoc de tipus trencaclosques. Fou inventat per l'enginyer informàtic rus Aleksei Pàjitnov l'any 1984, <br/> [1] mentre treballava a l'Acadèmia de Ciències de Moscou.
         <div className="mt-4">
             <h2>Instruccions:</h2>
@@ -15,6 +15,6 @@ export default function InicioVista() {
                 Al final de la partida podràs desar la teva puntuació, i veure el ranking de jugadors
             </p>
         </div>
-    </div>
+    </section>
   )
 }

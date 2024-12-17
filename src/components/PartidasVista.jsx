@@ -2,8 +2,8 @@ import TablaPartidas from "./TablaPartidas";
 
 export default function PartidasVista() {
   return (
-    <div>
+    <section className="vista">
       <TablaPartidas/>
-    </div>
+    </section>
   )
 }

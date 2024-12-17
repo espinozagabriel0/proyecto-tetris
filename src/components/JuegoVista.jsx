@@ -1,7 +1,9 @@
 
 export default function JuegoVista() {
   return (
-        <div className="d-flex gap-3 text-white mx-auto p-2 " style={{maxWidth: "68rem", fontSize: "1.5rem"}}>
+    <section className="vista">
+
+        <div className="d-flex gap-3 text-white mx-auto p-2" style={{maxWidth: "68rem", fontSize: "1.5rem"}}>
             <section className="d-flex flex-column gap-2">
                 <div className="rounded p-4 text-center border">Guardado</div>
                 <div className="rounded p-4 border d-flex flex-column align-items-center justify-content-center">
@@ -41,5 +43,6 @@ export default function JuegoVista() {
                 </div>
             </section>
         </div>
+    </section>
   )
 }
