@@ -1,3 +1,4 @@
+import Inicio from './components/Inicio'
 import TablaPartidas from './components/TablaPartidas'
 import VentanaModal from './components/VentanaModal'
 import { useState } from "react"
@@ -16,6 +17,9 @@ function App() {
   )
   return (
     <div className="">
+      <Inicio/>
+      
+      
       <TablaPartidas
         data={data}
         setData={setData}
@@ -31,6 +35,8 @@ function App() {
         data={data}
         setData={setData}
       />
+
+  
     </div>
   )
 }
