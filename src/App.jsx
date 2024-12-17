@@ -1,6 +1,7 @@
-import Inicio from './components/Inicio'
-import Juego from './components/Juego'
+import InicioVista from './components/InicioVista'
+import JuegoVista from './components/JuegoVista'
 import TablaPartidas from './components/TablaPartidas'
+import TablaRanking from './components/TablaRanking'
 import VentanaModal from './components/VentanaModal'
 import { useState } from "react"
 
@@ -18,13 +19,15 @@ function App() {
   )
   return (
     <div className="">
-      <Inicio/>
+      <InicioVista/>
       
       
       <TablaPartidas
         data={data}
         setData={setData}
       />
+
+      <TablaRanking/>
 
       {/* TODO: Añade botón y modal para agregar nuevas partidas */}
       {/* <button className='rounded'>Añadir Partida</button> */}
@@ -37,7 +40,7 @@ function App() {
         setData={setData}
       />
 
-      <Juego/>
+      <JuegoVista/>
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import TablaPartidas from "./TablaPartidas";
 
-export default function Partidas() {
+export default function PartidasVista() {
   return (
     <div>
       <TablaPartidas/>

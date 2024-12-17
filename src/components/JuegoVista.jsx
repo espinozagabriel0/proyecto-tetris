@@ -1,5 +1,5 @@
 
-export default function Juego() {
+export default function JuegoVista() {
   return (
         <div className="d-flex gap-3 text-white mx-auto p-2 " style={{maxWidth: "68rem", fontSize: "1.5rem"}}>
             <section className="d-flex flex-column gap-2">
