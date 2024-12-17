@@ -1,37 +1,38 @@
+import InicioVista from './components/InicioVista'
+import JuegoVista from './components/JuegoVista'
 import TablaPartidas from './components/TablaPartidas'
+import TablaRanking from './components/TablaRanking'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import VentanaModal from './components/VentanaModal'
 import { useState } from "react"
+import PartidasVista from './components/PartidasVista';
 
 function App() {
-
-  const [data, setData] = useState([
-      {id: 1, avatar: "🦊", nick: "FoxPlayer", puntos: 1500, fecha: "2024-11-30"},
-      {id: 2, avatar: "🐼", nick: "Gabriel", puntos: 2200, fecha: "2024-12-01"},
-      {id: 3, avatar: "🦁", nick: "LionKing", puntos: 1800, fecha: "2024-12-02"},
-      {id: 4, avatar: "🐯", nick: "TigerStripe", puntos: 2000, fecha: "2024-12-02"},
-      {id: 5, avatar: "🐸", nick: "FrogJumper", puntos: 1700, fecha: "2024-12-03"},
-      {id: 6, avatar: "prueba1", nick: "ampersand", puntos: 9000, fecha: "2021-12-03"},
-      {id: 7, avatar: "prueba2", nick: "bala", puntos: 4500, fecha: "2024-12-10"}
-    ]
-  )
   return (
-    <div className="">
-      <TablaPartidas
-        data={data}
-        setData={setData}
-      />
-
-      {/* TODO: Añade botón y modal para agregar nuevas partidas */}
-      {/* <button className='rounded'>Añadir Partida</button> */}
-       
-      <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Añadir Partida
-      </button>
-      <VentanaModal
-        data={data}
-        setData={setData}
-      />
-    </div>
+    <Router>
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div className="container-fluid">
+          {/* <Link className="navbar-brand" to="/">MiApp</Link> */}
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav">
+              <li className="nav-item"><Link className="nav-link" to="/">Inicio</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/juego">Jugar</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/partidas">Partidas</Link></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+      <div className="container mt-4">
+        <Routes>
+          <Route path="/" element={<InicioVista />} />
+          <Route path="/juego" element={<JuegoVista />} />
+          <Route path="/partidas" element={<PartidasVista />} />
+        </Routes>
+      </div>
+    </Router>
   )
 }
 
