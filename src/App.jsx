@@ -2,46 +2,47 @@ import InicioVista from './components/InicioVista'
 import JuegoVista from './components/JuegoVista'
 import TablaPartidas from './components/TablaPartidas'
 import TablaRanking from './components/TablaRanking'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import VentanaModal from './components/VentanaModal'
 import { useState } from "react"
+import PartidasVista from './components/PartidasVista';
 
 function App() {
-
-  const [data, setData] = useState([
-      {id: 1, avatar: "🦊", nick: "FoxPlayer", puntos: 1500, fecha: "2024-11-30"},
-      {id: 2, avatar: "🐼", nick: "Gabriel", puntos: 2200, fecha: "2024-12-01"},
-      {id: 3, avatar: "🦁", nick: "LionKing", puntos: 1800, fecha: "2024-12-02"},
-      {id: 4, avatar: "🐯", nick: "TigerStripe", puntos: 2000, fecha: "2024-12-02"},
-      {id: 5, avatar: "🐸", nick: "FrogJumper", puntos: 1700, fecha: "2024-12-03"},
-      {id: 6, avatar: "prueba1", nick: "ampersand", puntos: 9000, fecha: "2021-12-03"},
-      {id: 7, avatar: "prueba2", nick: "bala", puntos: 4500, fecha: "2024-12-10"}
-    ]
-  )
   return (
-    <div className="">
-      <InicioVista/>
+    // <div className="">
+    //   <InicioVista/>
       
       
-      <TablaPartidas
-        data={data}
-        setData={setData}
-      />
+    //   <TablaPartidas
+    //     data={data}
+    //     setData={setData}
+    //   />
 
-      <TablaRanking/>
+    //   <TablaRanking/>
 
-      {/* TODO: Añade botón y modal para agregar nuevas partidas */}
-      {/* <button className='rounded'>Añadir Partida</button> */}
+    //   {/* TODO: Añade botón y modal para agregar nuevas partidas */}
+    //   {/* <button className='rounded'>Añadir Partida</button> */}
        
-      <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Añadir Partida
-      </button>
-      <VentanaModal
-        data={data}
-        setData={setData}
-      />
+    //   <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    //     Añadir Partida
+    //   </button>
+    //   <VentanaModal
+    //     data={data}
+    //     setData={setData}
+    //   />
 
-      <JuegoVista/>
-    </div>
+    //   <JuegoVista/>
+    // </div>
+
+    <Router>
+      <div className="container mt-4">
+        <Routes>
+          <Route path="/" element={<InicioVista />} />
+          <Route path="/juego" element={<JuegoVista />} />
+          <Route path="/partidas" element={<PartidasVista />} />
+        </Routes>
+      </div>
+    </Router>
   )
 }
 
