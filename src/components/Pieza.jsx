@@ -1,3 +1,4 @@
+import { colorPieza } from "../lib/colorPieza"
 
 export default function Pieza({matriz}) {
     // clonar componente panel
@@ -10,7 +11,7 @@ export default function Pieza({matriz}) {
               {fila.map((celda, index) => (
                 <div 
                   key={index} 
-                  className={`col border ${celda == 1 ? 'bg-dark': ''}`}
+                  className={`col border ${colorPieza(celda)}`}
                 >
                   {celda}
                 </div>

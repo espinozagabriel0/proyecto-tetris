@@ -1,3 +1,5 @@
+import { colorPieza } from "../lib/colorPieza"
+
 export default function Panel({modelos}) {
     return (
       <div className="">
@@ -8,7 +10,7 @@ export default function Panel({modelos}) {
             {fila.map((celda, index) => (
               <div 
                 key={index} 
-                className={`col border ${celda == 1 ? 'bg-dark': ''}`}
+                className={`col border ${colorPieza(celda)}`}
               >
                 {celda}
               </div>

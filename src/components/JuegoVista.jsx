@@ -5,6 +5,7 @@ import Pieza from "./Pieza"
 
 export default function JuegoVista() {
 
+  //estado de los modelos 
   const [arrayCasillas, setArrayCasillas] = useState(modelos)
 
 
@@ -37,9 +38,9 @@ export default function JuegoVista() {
             </section>
 
             <div id="juego-container" className=" rounded bg-dark bg-opacity-50">
-                <Panel modelos={modelos.matriz}/>
+                <Panel modelos={arrayCasillas.matriz}/>
                 {/* le paso como prop la pieza L para probar */}
-                <Pieza matriz={modelos.piezas[0].matriz[1]}/>
+                <Pieza matriz={arrayCasillas.piezas[1].matriz[0]}/>
             </div>
             
             <section className="d-flex flex-column gap-2">
