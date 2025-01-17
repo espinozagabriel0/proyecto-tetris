@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { modelos } from "../lib/modelos"
 import Panel from "./Panel"
+import Pieza from "./Pieza"
+
 export default function JuegoVista() {
 
   const [arrayCasillas, setArrayCasillas] = useState(modelos)
@@ -36,6 +38,8 @@ export default function JuegoVista() {
 
             <div id="juego-container" className=" rounded bg-dark bg-opacity-50">
                 <Panel modelos={modelos.matriz}/>
+                {/* le paso como prop la pieza L para probar */}
+                <Pieza matriz={modelos.piezas[0].matriz[1]}/>
             </div>
             
             <section className="d-flex flex-column gap-2">
