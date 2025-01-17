@@ -1,4 +1,5 @@
 import { useState } from "react"
+import VentanaModal from "./VentanaModal";
 
 export default function TablaPartidas() {
 
@@ -60,6 +61,14 @@ export default function TablaPartidas() {
 
     return (
         <div id="partidas" className="p-5 bg-dark container w-100 my-4">
+
+            <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Añadir Partida
+            </button>
+
+            {/*componente modal */}
+            <VentanaModal data={data} setData={setData}/>
+
             <h2 className="text-center text-light">Partidas</h2>
             <div className="input-group mb-3">
                 <input type="text" className="form-control" placeholder="Buscador" aria-label="Buscador" aria-describedby="button-addon2" />

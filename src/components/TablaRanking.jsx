@@ -1,7 +1,7 @@
 
 export default function TablaRanking() {
   return (
-    <div id="partidas" className="p-5 bg-dark container w-100 my-4 mt-4 border">
+    <div id="partidas" className="p-5 bg-dark container w-100 mt-10">
         <h2 className="text-center text-light">Ranking</h2>
         <table className="table table-dark">
             <tbody>

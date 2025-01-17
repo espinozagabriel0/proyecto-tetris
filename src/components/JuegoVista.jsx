@@ -1,8 +1,14 @@
-
+import { useState } from "react"
+import { modelos } from "../lib/modelos"
+import Panel from "./Panel"
 export default function JuegoVista() {
+
+  const [arrayCasillas, setArrayCasillas] = useState(modelos)
+
+
   return (
     <section className="vista">
-
+        
         <div className="d-flex gap-3 text-white mx-auto p-2" style={{maxWidth: "68rem", fontSize: "1.5rem"}}>
             <section className="d-flex flex-column gap-2">
                 <div className="rounded p-4 text-center border">Guardado</div>
@@ -28,8 +34,8 @@ export default function JuegoVista() {
                 </div>
             </section>
 
-            <div id="juego-container" className="border rounded bg-success-subtle">
-
+            <div id="juego-container" className=" rounded bg-dark bg-opacity-50">
+                <Panel modelos={modelos.matriz}/>
             </div>
             
             <section className="d-flex flex-column gap-2">

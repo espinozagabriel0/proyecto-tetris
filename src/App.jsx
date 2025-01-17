@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import VentanaModal from './components/VentanaModal'
 import { useState } from "react"
 import PartidasVista from './components/PartidasVista';
+import RankingVista from './components/RankingVista';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <li className="nav-item"><Link className="nav-link" to="/">Inicio</Link></li>
               <li className="nav-item"><Link className="nav-link" to="/juego">Jugar</Link></li>
               <li className="nav-item"><Link className="nav-link" to="/partidas">Partidas</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/ranking">Ranking</Link></li>
             </ul>
           </div>
         </div>
@@ -30,6 +32,7 @@ function App() {
           <Route path="/" element={<InicioVista />} />
           <Route path="/juego" element={<JuegoVista />} />
           <Route path="/partidas" element={<PartidasVista />} />
+          <Route path="/ranking" element={<RankingVista />} />
         </Routes>
       </div>
     </Router>
