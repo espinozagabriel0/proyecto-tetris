@@ -8,11 +8,43 @@ export default function JuegoVista() {
 
   //estado de los modelos 
   const [arrayCasillas, setArrayCasillas] = useState(modelos)
+  
+  console.log(arrayCasillas)
 
-  const pieza1 = nuevaPieza(2, 4)
-  const pieza2 = nuevaPieza(1, 3)
-  const pieza3 = nuevaPieza(3, 0)
-  const pieza4 = nuevaPieza(2, 5)
+
+  //estado inicial con pieza en fila = 0 y col numero entre 0 y 10
+  const [piezaActual, setPiezaActual] = useState(nuevaPieza(0, Math.floor(Math.random() * 11)))
+
+
+
+  const insertarNuevaPieza = () => {    
+
+    const copiaCasillas = [...arrayCasillas.matriz]
+
+    for (let i = 0; i < piezaActual.matriz.length; i++) {
+
+        for (let j = piezaActual.columna; j < piezaActual.matriz; j++) {
+
+            if (piezaActual.matriz[i][j] !== 0) {
+                copiaCasillas.matriz[i][j] = piezaActual.numero
+            }
+
+        }
+        
+    }
+
+    // console.log('modificado', piezaActual.numero)
+
+    setArrayCasillas({matriz: copiaCasillas, piezas: [...arrayCasillas.piezas]})
+  }
+
+  
+//   console.log(piezaActual.numero, piezaActual.)
+
+//   const pieza1 = nuevaPieza(2, 4)
+//   const pieza2 = nuevaPieza(1, 3)
+//   const pieza3 = nuevaPieza(3, 0)
+//   const pieza4 = nuevaPieza(2, 5)
 
 
 //   console.log(pieza1, pieza2)
@@ -50,11 +82,12 @@ export default function JuegoVista() {
                 {/* le paso como prop la pieza L para probar */}
 
                 <div className="d-flex flex-column gap-5">
-                    <Pieza matriz={pieza1.matriz}/>
-                    <Pieza matriz={pieza2.matriz}/>
-                    <Pieza matriz={pieza3.matriz}/>
-                    <Pieza matriz={pieza4.matriz}/>
+                    {/* <Pieza matriz={pieza1.matriz}/> */}
+                    {/* <Pieza matriz={pieza2.matriz}/> */}
+                    {/* <Pieza matriz={pieza3.matriz}/> */}
+                    {/* <Pieza matriz={pieza4.matriz}/> */}
                 </div>
+                
             </div>
             
             <section className="d-flex flex-column gap-2">
@@ -65,6 +98,7 @@ export default function JuegoVista() {
                 <div className="border rounded p-2 d-flex flex-column gap-2">
                     <button className="btn btn-success">JUGAR</button>
                     <button className="btn btn-info">PAUSA</button>
+                    <button className="mt-3 btn btn-warning" onClick={() => insertarNuevaPieza()}>Insertar pieza</button>
                 </div>
             </section>
         </div>
