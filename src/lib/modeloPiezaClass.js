@@ -1,6 +1,8 @@
 export class modeloPieza {
     angulo = 0
-
+    fila = 0
+    columna = 1
+    
     constructor(numero, nombre, fila, columna, matriz) {
         this.numero = numero; 
         this.nombre = nombre; 
