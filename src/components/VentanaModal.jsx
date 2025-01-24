@@ -12,7 +12,13 @@ export default function VentanaModal({data, setData}) {
         e.preventDefault()
 
         //añadir la partida al array con setData
-        const nuevaPartida = {id: data.length +1, avatar: avatar, nick: nick, puntos: puntuacion, fecha: fecha}
+        const nuevaPartida = {
+            id: data.length +1, 
+            avatar: avatar, 
+            nick: nick, 
+            puntos: puntuacion, 
+            fecha: fecha
+        }
         setData([...data, nuevaPartida])
 
         limpiarInputs()
@@ -55,7 +61,7 @@ export default function VentanaModal({data, setData}) {
                 </div>
                 <div className="modal-footer">
                     <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" className="btn btn-primary" onClick={añadirPartida}>Save changes</button>
+                    <button type="button" className="btn btn-primary" onClick={añadirPartida} data-bs-dismiss="modal">Save changes</button>
                 </div>
             </div>
         </div>

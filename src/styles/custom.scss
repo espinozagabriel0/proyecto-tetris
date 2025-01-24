@@ -17,12 +17,17 @@ thead td{
   cursor: pointer;
 }
 
-
 // vista juego
 #juego-container{
   min-width: 40rem;
 }
 
+section.vista-juego{
+  max-width: 70rem;
+  margin: 0 auto;
+}
 section.vista{
-  margin-top: 7rem;
+  margin-top: 5rem !important;
+  max-width: 70rem;
+  margin: 0 auto;
 }
