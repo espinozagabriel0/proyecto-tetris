@@ -12,33 +12,36 @@ export default function JuegoVista() {
 
   const piezaInicial = nuevaPieza(0, Math.floor(Math.random() * 10) + 1)
 
-  //estado inicial con pieza en fila = 0 y col numero entre 0 y 10
+  //estado inicial pieza actual
   const [piezaActual, setPiezaActual] = useState(piezaInicial)
 
 
-  const limitePieza = (col, lengthPieza) => {
-    return col - lengthPieza > 1 ? true: false
+  // comprobar si la pieza actual no sobrepasa el panel 
+  const canSetPieza = (col, lengthPieza) => {
+    return col + lengthPieza <= 10
   }
-
+  
   const insertarNuevaPieza = () => {    
-    // console.log('pieza incial rango', piezaInicial.columna)
-    // console.log(piezaInicial.)
-
-
-
     // creamos una instancia de pieza y luego la pintamos, falta correcion errores colisiones
-    pintarPieza()
-    // console.log(piezaActual.matriz[0].length)
+    console.log('length pieza', piezaActual.matriz[0].length)
 
-    // TODO: 
-    setPiezaActual(nuevaPieza(0, limitePieza((Math.floor(Math.random() * 10) + 1), piezaActual.matriz[0].length) ? '' :(Math.floor(Math.random() * 10) + 1)) )
+    let colRandom = Math.floor(Math.random() * 10) + 1
+
+    if (!canSetPieza(colRandom, piezaActual.matriz[0].length)) {
+        // si la col mas el length de la pieza es mayor, escoger la columna maxima que se pueda entre pos 1 y 10 - length de la pieza
+        console.log('pieza fuera', piezaActual.nombre)
+        console.log('length pieza fuera', piezaActual.matriz[0].length)
+        console.log('col fuera', piezaActual.columna)
+        colRandom = 11 - piezaActual.matriz[0].length 
+    }
     
+    setPiezaActual(nuevaPieza(0, colRandom))
+    pintarPieza()
   }
 
 
   const pintarPieza = () => {
     //  capaz de insertar en el panel (es decir, en la fila 0 y la columna aleatoria) la matriz de la nueva pieza instanciada guardada en el estado piezaActual.
-    
     const copiaCasillas = [...arrayCasillas.matriz]
 
     piezaActual.matriz.map((fila, rowIndex) => {
@@ -50,10 +53,10 @@ export default function JuegoVista() {
     })
 
     setArrayCasillas({...arrayCasillas, copiaCasillas})
-      
   }
   
 
+  console.log(arrayCasillas)
 
   return (
     <section className="vista-juego p-2">
