@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { modelos } from "../lib/modelos"
 import Panel from "./Panel"
 import Pieza from "./Pieza"
@@ -8,13 +8,13 @@ export default function JuegoVista() {
 
   //estado de los modelos 
   const [arrayCasillas, setArrayCasillas] = useState(modelos)
-  
-
-  const piezaInicial = nuevaPieza(0, Math.floor(Math.random() * 10) + 1)
 
   //estado inicial pieza actual
+  const piezaInicial = nuevaPieza(0, Math.floor(Math.random() * 10) + 1)
   const [piezaActual, setPiezaActual] = useState(piezaInicial)
 
+
+  const [direccion, setDireccion] = useState('down')
 
   // comprobar si la pieza actual no sobrepasa el panel 
   const canSetPieza = (col, lengthPieza) => {
@@ -36,7 +36,7 @@ export default function JuegoVista() {
     }
     
     setPiezaActual(nuevaPieza(0, colRandom))
-    pintarPieza()
+    // pintarPieza()
   }
 
 
@@ -56,7 +56,53 @@ export default function JuegoVista() {
   }
   
 
-  console.log(arrayCasillas)
+  const girar = () => {
+    console.log('girar')
+  }
+  const bajar = () => {
+    console.log('bajar')
+  }
+  const moverIzq = () => {
+    console.log('mover izq')
+  }
+  const moverDra = () => {
+    console.log('mover derecha')
+  }
+
+
+  const controlTeclas = (event) => {
+    setDireccion(event.key)
+    switch (event.key) {
+        case 'ArrowUp':
+            girar()
+        break;
+      case 'ArrowDown':
+            bajar()
+        break;
+      case 'ArrowLeft':
+            moverIzq()
+        break;
+      case 'ArrowRight':
+            moverDra()
+        break;
+      default:
+        break;
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', controlTeclas);
+
+    return () => {
+        window.removeEventListener('keydown', controlTeclas); 
+    };
+
+  }, [direccion])
+
+//   al cambiar pieza actual pintar pieza
+  useEffect(() => {
+    pintarPieza()
+  }, [piezaActual])
 
   return (
     <section className="vista-juego p-2">
