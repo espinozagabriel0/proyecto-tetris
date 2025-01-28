@@ -56,11 +56,41 @@ export default function JuegoVista() {
   }
   
 
+  const borrarPieza = () => {
+    // funcion que borra la pieza actual antes de cada movimiento
+    const copiaCasillas = [...arrayCasillas.matriz]
+
+    // se hace lo mismo que en pintar pieza pero en vez de poner el valor de la pieza, lo ponemos a 0 para borrarla
+    piezaActual.matriz.map((fila, rowIndex) => {
+        fila.map((col, colIndex) => {
+            if (col !== 0) {
+                copiaCasillas[piezaActual.fila + rowIndex][piezaActual.columna + colIndex] = 0
+            }
+        }) 
+    })
+
+    setArrayCasillas({...arrayCasillas, copiaCasillas})
+  }
+
+
+
   const girar = () => {
     console.log('girar')
   }
+
   const bajar = () => {
-    console.log('bajar')
+    // incrementa la posición vertical de la pieza actual y la vuelve a insertar en el panel
+    borrarPieza()
+    if (piezaActual.fila  + piezaActual.matriz.length < 21) {
+        piezaActual.fila += 1
+    }
+    console.log('fila', piezaActual.fila)
+    // vuelve a insertar la misma pieza en el panel (con el useeffect se volvera a pintar)
+    setPiezaActual({...piezaActual})
+
+    // console.log(piezaActual.nombre)
+    // console.log('fila', piezaActual.fila)
+    // console.log('bajar')
   }
   const moverIzq = () => {
     console.log('mover izq')
