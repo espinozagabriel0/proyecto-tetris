@@ -36,7 +36,6 @@ export default function JuegoVista() {
     }
     
     setPiezaActual(nuevaPieza(0, colRandom))
-    // pintarPieza()
   }
 
 
@@ -76,27 +75,44 @@ export default function JuegoVista() {
 
   const girar = () => {
     console.log('girar')
+
+    borrarPieza()
+    // incrementar angulo
+    piezaActual.girar()
+
+    setPiezaActual({...piezaActual})
   }
 
   const bajar = () => {
+
     // incrementa la posición vertical de la pieza actual y la vuelve a insertar en el panel
     borrarPieza()
+    console.log(piezaActual.matriz)
     if (piezaActual.fila  + piezaActual.matriz.length < 21) {
         piezaActual.fila += 1
     }
-    console.log('fila', piezaActual.fila)
+
+    console.log(piezaActual.fila)
     // vuelve a insertar la misma pieza en el panel (con el useeffect se volvera a pintar)
     setPiezaActual({...piezaActual})
-
-    // console.log(piezaActual.nombre)
-    // console.log('fila', piezaActual.fila)
-    // console.log('bajar')
   }
+
   const moverIzq = () => {
-    console.log('mover izq')
+    borrarPieza()
+    // comprobar limites horizontales pieza y si llega al suelo, no dejar mover
+    if (piezaActual.columna > 1 && piezaActual.fila + piezaActual.matriz.length < 21) {
+        piezaActual.columna -= 1
+    }
+    setPiezaActual({...piezaActual})
   }
   const moverDra = () => {
-    console.log('mover derecha')
+    borrarPieza()
+
+    if (piezaActual.columna + piezaActual.matriz[0].length <= 10 && piezaActual.fila + piezaActual.matriz.length < 21) {
+        piezaActual.columna += 1
+    }
+    console.log(piezaActual.columna)
+    setPiezaActual({...piezaActual})
   }
 
 
