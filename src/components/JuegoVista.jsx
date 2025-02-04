@@ -3,6 +3,7 @@ import { modelos } from "../lib/modelos"
 import Panel from "./Panel"
 import Pieza from "./Pieza"
 import { nuevaPieza } from "../lib/nuevaPieza"
+import { modeloPieza } from "../lib/modeloPiezaClass"
 
 export default function JuegoVista() {
 
@@ -13,6 +14,7 @@ export default function JuegoVista() {
   const piezaInicial = nuevaPieza(0, Math.floor(Math.random() * 10) + 1)
   const [piezaActual, setPiezaActual] = useState(piezaInicial)
 
+  // console.log(piezaActual.matriz[0])
 
   const [direccion, setDireccion] = useState('down')
 
@@ -29,9 +31,9 @@ export default function JuegoVista() {
 
     if (!canSetPieza(colRandom, piezaActual.matriz[0].length)) {
         // si la col mas el length de la pieza es mayor, escoger la columna maxima que se pueda entre pos 1 y 10 - length de la pieza
-        console.log('pieza fuera', piezaActual.nombre)
-        console.log('length pieza fuera', piezaActual.matriz[0].length)
-        console.log('col fuera', piezaActual.columna)
+        // console.log('pieza fuera', piezaActual.nombre)
+        // console.log('length pieza fuera', piezaActual.matriz[0].length)
+        // console.log('col fuera', piezaActual.columna)
         colRandom = 11 - piezaActual.matriz[0].length 
     }
     
@@ -73,14 +75,23 @@ export default function JuegoVista() {
 
 
 
-  const girar = () => {
+  // falta comprobar si hay colision, para impedir el giro, movimientos izq, der y abajo
+  const girarPieza = () => {
     console.log('girar')
 
     borrarPieza()
-    // incrementar angulo
-    piezaActual.girar()
+
+    // girar la pieza actual, falta implementar girar() del objeto piezaActual sin que se pierda la función
+    if (piezaActual.angulo < 3) {
+      piezaActual.angulo += 1
+    }else{
+      piezaActual.angulo = 0
+    }
+
+    piezaActual.matriz = piezaActual.matrices[piezaActual.angulo]
 
     setPiezaActual({...piezaActual})
+    // setPiezaActual(nuevaPieza)
   }
 
   const bajar = () => {
@@ -88,8 +99,9 @@ export default function JuegoVista() {
     // incrementa la posición vertical de la pieza actual y la vuelve a insertar en el panel
     borrarPieza()
     console.log(piezaActual.matriz)
+
     if (piezaActual.fila  + piezaActual.matriz.length < 21) {
-        piezaActual.fila += 1
+      piezaActual.fila += 1
     }
 
     console.log(piezaActual.fila)
@@ -120,7 +132,7 @@ export default function JuegoVista() {
     setDireccion(event.key)
     switch (event.key) {
         case 'ArrowUp':
-            girar()
+            girarPieza()
         break;
       case 'ArrowDown':
             bajar()
@@ -140,7 +152,7 @@ export default function JuegoVista() {
     window.addEventListener('keydown', controlTeclas);
 
     return () => {
-        window.removeEventListener('keydown', controlTeclas); 
+      window.removeEventListener('keydown', controlTeclas); 
     };
 
   }, [direccion])
