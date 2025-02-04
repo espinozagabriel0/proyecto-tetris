@@ -14,7 +14,6 @@ export default function JuegoVista() {
   const piezaInicial = nuevaPieza(0, Math.floor(Math.random() * 10) + 1)
   const [piezaActual, setPiezaActual] = useState(piezaInicial)
 
-  // console.log(piezaActual.matriz[0])
 
   const [direccion, setDireccion] = useState('down')
 
@@ -24,16 +23,11 @@ export default function JuegoVista() {
   }
   
   const insertarNuevaPieza = () => {    
-    // creamos una instancia de pieza y luego la pintamos, falta correcion errores colisiones
     console.log('length pieza', piezaActual.matriz[0].length)
 
     let colRandom = Math.floor(Math.random() * 10) + 1
 
     if (!canSetPieza(colRandom, piezaActual.matriz[0].length)) {
-        // si la col mas el length de la pieza es mayor, escoger la columna maxima que se pueda entre pos 1 y 10 - length de la pieza
-        // console.log('pieza fuera', piezaActual.nombre)
-        // console.log('length pieza fuera', piezaActual.matriz[0].length)
-        // console.log('col fuera', piezaActual.columna)
         colRandom = 11 - piezaActual.matriz[0].length 
     }
     
@@ -46,10 +40,8 @@ export default function JuegoVista() {
     const copiaCasillas = [...arrayCasillas.matriz]
 
     piezaActual.matriz.map((fila, rowIndex) => {
-        fila.map((col, colIndex) => {
-            if (col !== 0) {
-                copiaCasillas[piezaActual.fila + rowIndex][piezaActual.columna + colIndex] = col
-            }
+        fila.map((col, colIndex) => {  
+          copiaCasillas[piezaActual.fila + rowIndex][piezaActual.columna + colIndex] = col
         }) 
     })
 
@@ -74,7 +66,6 @@ export default function JuegoVista() {
   }
 
 
-
   // falta comprobar si hay colision, para impedir el giro, movimientos izq, der y abajo
   const girarPieza = () => {
     console.log('girar')
@@ -95,7 +86,6 @@ export default function JuegoVista() {
   }
 
   const bajar = () => {
-
     // incrementa la posición vertical de la pieza actual y la vuelve a insertar en el panel
     borrarPieza()
     console.log(piezaActual.matriz)
@@ -105,8 +95,7 @@ export default function JuegoVista() {
     }
 
     console.log(piezaActual.fila)
-    // vuelve a insertar la misma pieza en el panel (con el useeffect se volvera a pintar)
-    setPiezaActual({...piezaActual})
+    setPiezaActual({...piezaActual, fila: piezaActual.fila})
   }
 
   const moverIzq = () => {
@@ -115,7 +104,7 @@ export default function JuegoVista() {
     if (piezaActual.columna > 1 && piezaActual.fila + piezaActual.matriz.length < 21) {
         piezaActual.columna -= 1
     }
-    setPiezaActual({...piezaActual})
+    setPiezaActual({...piezaActual, columna: piezaActual.columna})
   }
   const moverDra = () => {
     borrarPieza()
@@ -124,7 +113,7 @@ export default function JuegoVista() {
         piezaActual.columna += 1
     }
     console.log(piezaActual.columna)
-    setPiezaActual({...piezaActual})
+    setPiezaActual({...piezaActual, columna: piezaActual.columna})
   }
 
 
@@ -148,6 +137,15 @@ export default function JuegoVista() {
     }
   }
 
+
+  // const iniciarMovimieno  = () => {
+  //   setInterval(() => {
+  //     bajar()
+
+  //   }, 1000);
+  // }
+  
+
   useEffect(() => {
     window.addEventListener('keydown', controlTeclas);
 
@@ -157,14 +155,22 @@ export default function JuegoVista() {
 
   }, [direccion])
 
-//   al cambiar pieza actual pintar pieza
+
   useEffect(() => {
     pintarPieza()
+    
+    const intervalID = setInterval(() => {
+      bajar()
+    }, 1000);
+
+    return () => {
+      clearInterval(intervalID)
+    }
+    // iniciarMovimieno()
   }, [piezaActual])
 
   return (
     <section className="vista-juego p-2">
-        
         <div className="d-flex gap-3 text-white mx-auto p-2" style={{maxWidth: "68rem", fontSize: "1.5rem"}}>
             <section className="d-flex flex-column gap-2">
                 <div className="rounded p-4 text-center border">Guardado</div>
@@ -191,16 +197,7 @@ export default function JuegoVista() {
             </section>
 
             <div id="juego-container" className=" rounded bg-dark bg-opacity-50">
-                <Panel modelos={arrayCasillas.matriz}/>
-                {/* le paso como prop la pieza L para probar */}
-
-                <div className="d-flex flex-column gap-5">
-                    {/* <Pieza matriz={pieza1.matriz}/> */}
-                    {/* <Pieza matriz={pieza2.matriz}/> */}
-                    {/* <Pieza matriz={pieza3.matriz}/> */}
-                    {/* <Pieza matriz={pieza4.matriz}/> */}
-                </div>
-                
+              <Panel modelos={arrayCasillas.matriz}/>
             </div>
             
             <section className="d-flex flex-column gap-2 p-5">
@@ -209,7 +206,7 @@ export default function JuegoVista() {
                     {/*  */}
                 </div>
                 <div className="border rounded p-2 d-flex flex-column gap-2">
-                    <button className="btn btn-success">JUGAR</button>
+                    <button className="btn btn-success" onClick={() => iniciarMovimieno()}>JUGAR</button>
                     <button className="btn btn-info">PAUSA</button>
                     <button className="mt-3 btn btn-warning" onClick={() => insertarNuevaPieza()}>Insertar pieza</button>
                 </div>
