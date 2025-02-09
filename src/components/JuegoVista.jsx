@@ -23,7 +23,7 @@ export default function JuegoVista() {
   }
   
   const insertarNuevaPieza = () => {    
-    console.log('length pieza', piezaActual.matriz[0].length)
+    // console.log('length pieza', piezaActual.matriz[0].length)
 
     let colRandom = Math.floor(Math.random() * 10) + 1
 
@@ -34,117 +34,118 @@ export default function JuegoVista() {
     setPiezaActual(nuevaPieza(0, colRandom))
   }
 
+ 
 
   const pintarPieza = () => {
-    //  capaz de insertar en el panel (es decir, en la fila 0 y la columna aleatoria) la matriz de la nueva pieza instanciada guardada en el estado piezaActual.
-    const copiaCasillas = [...arrayCasillas.matriz]
-
-    piezaActual.matriz.map((fila, rowIndex) => {
-        fila.map((col, colIndex) => {  
-          copiaCasillas[piezaActual.fila + rowIndex][piezaActual.columna + colIndex] = col
-        }) 
-    })
-
-    setArrayCasillas({...arrayCasillas, copiaCasillas})
-  }
+    // se copia todo el array, copia completa 
+    const copiaCasillas = arrayCasillas.matriz.map(fila => [...fila]); 
+  
+    piezaActual.matriz.forEach((fila, rowIndex) => {
+      fila.forEach((col, colIndex) => {
+        if (col !== 0) {
+          copiaCasillas[piezaActual.fila + rowIndex][piezaActual.columna + colIndex] = col;
+        }
+      });
+    });
+  
+    setArrayCasillas(prev => ({ ...prev, matriz: copiaCasillas }));
+  };
   
 
   const borrarPieza = () => {
-    // funcion que borra la pieza actual antes de cada movimiento
-    const copiaCasillas = [...arrayCasillas.matriz]
+    const copiaCasillas = arrayCasillas.matriz.map(fila => [...fila]); 
+  
+    piezaActual.matriz.forEach((fila, rowIndex) => {
+      fila.forEach((col, colIndex) => {
+        if (col !== 0) {
+          copiaCasillas[piezaActual.fila + rowIndex][piezaActual.columna + colIndex] = 0;
+        }
+      });
+    });
+  
+    setArrayCasillas(prev => ({ ...prev, matriz: copiaCasillas }));
+  };
+  
 
-    // se hace lo mismo que en pintar pieza pero en vez de poner el valor de la pieza, lo ponemos a 0 para borrarla
-    piezaActual.matriz.map((fila, rowIndex) => {
-        fila.map((col, colIndex) => {
-            if (col !== 0) {
-                copiaCasillas[piezaActual.fila + rowIndex][piezaActual.columna + colIndex] = 0
-            }
-        }) 
-    })
-
-    setArrayCasillas({...arrayCasillas, copiaCasillas})
-  }
-
-
-  // falta comprobar si hay colision, para impedir el giro, movimientos izq, der y abajo
   const girarPieza = () => {
-    console.log('girar')
+    borrarPieza();
+  
+    setPiezaActual(prevPieza => {
+      let nuevoAngulo = prevPieza.angulo 
+      
+      if (nuevoAngulo < 3) {
+        nuevoAngulo += 1
+      }else{
+        nuevoAngulo = 0
+      }
 
-    borrarPieza()
-
-    // girar la pieza actual, falta implementar girar() del objeto piezaActual sin que se pierda la función
-    if (piezaActual.angulo < 3) {
-      piezaActual.angulo += 1
-    }else{
-      piezaActual.angulo = 0
-    }
-
-    piezaActual.matriz = piezaActual.matrices[piezaActual.angulo]
-
-    setPiezaActual({...piezaActual})
-    // setPiezaActual(nuevaPieza)
+      return { 
+        ...prevPieza,
+        angulo: nuevoAngulo,
+        matriz: prevPieza.matrices[nuevoAngulo], 
+      }
+    })
   }
+  
+  
 
   const bajar = () => {
-    // incrementa la posición vertical de la pieza actual y la vuelve a insertar en el panel
     borrarPieza()
-    console.log(piezaActual.matriz)
 
-    if (piezaActual.fila  + piezaActual.matriz.length < 21) {
-      piezaActual.fila += 1
-    }
+    setPiezaActual(prevPieza => {
+      if (prevPieza.fila + prevPieza.matriz.length < 21) {
+        return {...prevPieza, fila: prevPieza.fila + 1}
+      }
+      insertarNuevaPieza()
+      return prevPieza
+    })
 
-    console.log(piezaActual.fila)
-    setPiezaActual({...piezaActual, fila: piezaActual.fila})
+    // console.log((piezaActual.fila + piezaActual.matriz.length))
+    // console.log(piezaActual.fila)
   }
 
   const moverIzq = () => {
     borrarPieza()
-    // comprobar limites horizontales pieza y si llega al suelo, no dejar mover
-    if (piezaActual.columna > 1 && piezaActual.fila + piezaActual.matriz.length < 21) {
-        piezaActual.columna -= 1
-    }
-    setPiezaActual({...piezaActual, columna: piezaActual.columna})
+
+    setPiezaActual(prevPieza => {
+      if (prevPieza.columna > 1 && prevPieza.fila + prevPieza.matriz.length < 21) { 
+        return {...prevPieza, columna: prevPieza.columna - 1}
+      }
+      return prevPieza
+    })
   }
+
   const moverDra = () => {
     borrarPieza()
 
-    if (piezaActual.columna + piezaActual.matriz[0].length <= 10 && piezaActual.fila + piezaActual.matriz.length < 21) {
-        piezaActual.columna += 1
-    }
-    console.log(piezaActual.columna)
-    setPiezaActual({...piezaActual, columna: piezaActual.columna})
+    setPiezaActual(prevPieza => {
+      if (prevPieza.columna + prevPieza.matriz[0].length <= 10 && prevPieza.fila + prevPieza.matriz.length < 21) {
+        return {...prevPieza, columna: prevPieza.columna + 1}
+      }
+      
+      return prevPieza
+    })
   }
-
 
   const controlTeclas = (event) => {
     setDireccion(event.key)
     switch (event.key) {
         case 'ArrowUp':
-            girarPieza()
+          girarPieza()
         break;
       case 'ArrowDown':
-            bajar()
+          bajar()
         break;
       case 'ArrowLeft':
-            moverIzq()
+          moverIzq()
         break;
       case 'ArrowRight':
-            moverDra()
+          moverDra()
         break;
       default:
         break;
     }
   }
-
-
-  // const iniciarMovimieno  = () => {
-  //   setInterval(() => {
-  //     bajar()
-
-  //   }, 1000);
-  // }
-  
 
   useEffect(() => {
     window.addEventListener('keydown', controlTeclas);
@@ -153,12 +154,13 @@ export default function JuegoVista() {
       window.removeEventListener('keydown', controlTeclas); 
     };
 
-  }, [direccion])
+  }, [])
 
 
   useEffect(() => {
     pintarPieza()
     
+    // console.log((piezaActual.fila + piezaActual.matriz.length));
     const intervalID = setInterval(() => {
       bajar()
     }, 1000);
@@ -166,7 +168,6 @@ export default function JuegoVista() {
     return () => {
       clearInterval(intervalID)
     }
-    // iniciarMovimieno()
   }, [piezaActual])
 
   return (
