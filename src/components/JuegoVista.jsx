@@ -14,17 +14,12 @@ export default function JuegoVista() {
   const piezaInicial = nuevaPieza(0, Math.floor(Math.random() * 10) + 1)
   const [piezaActual, setPiezaActual] = useState(piezaInicial)
 
-
-  const [direccion, setDireccion] = useState('down')
-
   // comprobar si la pieza actual no sobrepasa el panel 
   const canSetPieza = (col, lengthPieza) => {
     return col + lengthPieza <= 10
   }
   
   const insertarNuevaPieza = () => {    
-    // console.log('length pieza', piezaActual.matriz[0].length)
-
     let colRandom = Math.floor(Math.random() * 10) + 1
 
     if (!canSetPieza(colRandom, piezaActual.matriz[0].length)) {
@@ -39,6 +34,7 @@ export default function JuegoVista() {
   const pintarPieza = () => {
     // se copia todo el array, copia completa 
     const copiaCasillas = arrayCasillas.matriz.map(fila => [...fila]); 
+    // const copiaCasillas = [...arrayCasillas.matriz]; 
   
     piezaActual.matriz.forEach((fila, rowIndex) => {
       fila.forEach((col, colIndex) => {
@@ -48,29 +44,32 @@ export default function JuegoVista() {
       });
     });
   
-    setArrayCasillas(prev => ({ ...prev, matriz: copiaCasillas }));
+    setArrayCasillas({matriz: copiaCasillas });
   };
   
 
-  const borrarPieza = () => {
+  const borrarPieza = (filaPieza, colPieza) => {
     const copiaCasillas = arrayCasillas.matriz.map(fila => [...fila]); 
-  
+    // const copiaCasillas = [...arrayCasillas.matriz]; 
+    
     piezaActual.matriz.forEach((fila, rowIndex) => {
       fila.forEach((col, colIndex) => {
         if (col !== 0) {
-          copiaCasillas[piezaActual.fila + rowIndex][piezaActual.columna + colIndex] = 0;
+            copiaCasillas[filaPieza + rowIndex][colPieza + colIndex] = 0;
         }
       });
     });
   
-    setArrayCasillas(prev => ({ ...prev, matriz: copiaCasillas }));
+    setArrayCasillas({matriz: copiaCasillas });
   };
   
 
   const girarPieza = () => {
-    borrarPieza();
-  
+    
+    
     setPiezaActual(prevPieza => {
+      borrarPieza(prevPieza.fila, prevPieza.columna);
+      
       let nuevoAngulo = prevPieza.angulo 
       
       if (nuevoAngulo < 3) {
@@ -90,24 +89,26 @@ export default function JuegoVista() {
   
 
   const bajar = () => {
-    borrarPieza()
+
+    borrarPieza(piezaActual.fila, piezaActual.columna)
 
     setPiezaActual(prevPieza => {
+
       if (prevPieza.fila + prevPieza.matriz.length < 21) {
         return {...prevPieza, fila: prevPieza.fila + 1}
       }
-      insertarNuevaPieza()
+
       return prevPieza
     })
-
-    // console.log((piezaActual.fila + piezaActual.matriz.length))
-    // console.log(piezaActual.fila)
   }
 
   const moverIzq = () => {
-    borrarPieza()
+    borrarPieza(piezaActual.fila, piezaActual.columna)
 
     setPiezaActual(prevPieza => {
+      
+      // borrarPieza(prevPieza.fila, prevPieza.columna)
+
       if (prevPieza.columna > 1 && prevPieza.fila + prevPieza.matriz.length < 21) { 
         return {...prevPieza, columna: prevPieza.columna - 1}
       }
@@ -116,19 +117,19 @@ export default function JuegoVista() {
   }
 
   const moverDra = () => {
-    borrarPieza()
+    borrarPieza(piezaActual.fila, piezaActual.columna)
 
     setPiezaActual(prevPieza => {
+      // borrarPieza(prevPieza.fila, prevPieza.columna)
       if (prevPieza.columna + prevPieza.matriz[0].length <= 10 && prevPieza.fila + prevPieza.matriz.length < 21) {
         return {...prevPieza, columna: prevPieza.columna + 1}
       }
-      
       return prevPieza
     })
   }
 
   const controlTeclas = (event) => {
-    setDireccion(event.key)
+
     switch (event.key) {
         case 'ArrowUp':
           girarPieza()
@@ -160,14 +161,18 @@ export default function JuegoVista() {
   useEffect(() => {
     pintarPieza()
     
-    // console.log((piezaActual.fila + piezaActual.matriz.length));
-    const intervalID = setInterval(() => {
-      bajar()
-    }, 1000);
-
-    return () => {
-      clearInterval(intervalID)
+    if (piezaActual.fila + piezaActual.matriz.length < 21) {
+      const intervalID = setInterval(() => {
+        bajar()
+      }, 1000);
+      
+      return () => {  
+        clearInterval(intervalID)
+      }
+    }else{
+      insertarNuevaPieza()
     }
+
   }, [piezaActual])
 
   return (
