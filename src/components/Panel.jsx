@@ -10,9 +10,10 @@ export default function Panel({modelos}) {
             {fila.map((celda, index) => (
               <div 
                 key={index} 
+                id="celdas"
                 className={`col border ${colorPieza(celda)}`}
               >
-                {celda}
+                {/* {celda} */}
               </div>
             ))}
           </div>

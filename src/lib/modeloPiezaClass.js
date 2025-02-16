@@ -9,7 +9,8 @@ export class modeloPieza {
         // this.angulo = angulo; // valor entre [0, 3], representando angulos [0, 90, 180, 270]
         this.fila = fila
         this.columna = columna
-        this.matriz = matriz; // puntero que apunta al array correspondiente, dependiendo del numero y angulo de la pieza
+        this.matrices = matriz
+        this.matriz = matriz[this.angulo]; // puntero que apunta al array correspondiente, dependiendo del numero y angulo de la pieza
     }
 
     girar(){
@@ -18,5 +19,6 @@ export class modeloPieza {
         }else{
             this.angulo = 0
         }
+        this.matriz = this.matrices[this.angulo]
     }
 }
