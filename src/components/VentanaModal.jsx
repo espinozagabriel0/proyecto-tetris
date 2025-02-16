@@ -1,33 +1,38 @@
 import { useState } from "react"
+import {useNavigate } from "react-router-dom"
 
 export default function VentanaModal({data, setData, puntuacion}) {
 
     const [avatar, setAvatar] = useState('')
     const [nick, setNick] = useState('')
-    // const [puntuacion, setPuntuacion] = useState('')
     const [fecha, setFecha] = useState('')
 
+    const navigate = useNavigate()
 
     const añadirPartida = (e) => {
         e.preventDefault()
 
-        //añadir la partida al array con setData
-        const nuevaPartida = {
-            id: data.length +1, 
-            avatar: avatar, 
-            nick: nick, 
-            puntos: puntuacion, 
-            fecha: fecha
-        }
-        setData([...data, nuevaPartida])
+        if (avatar && fecha && nick) {
+            //añadir la partida al array con setData
+            const nuevaPartida = {
+                id: data.length +1, 
+                avatar: avatar, 
+                nick: nick, 
+                puntos: puntuacion, 
+                fecha: fecha
+            }
+            setData([...data, nuevaPartida])
+    
+            limpiarInputs()
 
-        limpiarInputs()
+            // redirigir a vista partidas
+            navigate('/partidas')
+        }
     }
 
     const limpiarInputs = () => {
         setAvatar("")
         setNick("")
-        // setPuntuacion("")
         setFecha("")
     }
 
@@ -43,11 +48,11 @@ export default function VentanaModal({data, setData, puntuacion}) {
                     <form>
                         <div className="mb-3">
                             <label htmlFor="avatar" className="col-form-label">Avatar:</label>
-                            <input type="text" className="form-control" id="avatar" onChange={(e) => setAvatar(e.target.value)} value={avatar} />
+                            <input type="text" className="form-control" id="avatar" onChange={(e) => setAvatar(e.target.value)} value={avatar} required/>
                         </div>
                         <div className="mb-3">
                             <label htmlFor="nick" className="col-form-label">Nick:</label>
-                            <input type="text" className="form-control" id="nick" onChange={(e) => setNick(e.target.value)} value={nick}/>
+                            <input type="text" className="form-control" id="nick" onChange={(e) => setNick(e.target.value)} value={nick} required/>
                         </div>
                         <div className="mb-3">
                             <label htmlFor="puntos" className="col-form-label">Puntuación:</label>
@@ -56,7 +61,7 @@ export default function VentanaModal({data, setData, puntuacion}) {
                         </div>
                         <div className="mb-3">
                             <label htmlFor="fecha" className="col-form-label">Fecha:</label>
-                            <input type="date" className="form-control" id="fecha" onChange={(e) => setFecha(e.target.value)} value={fecha}/>
+                            <input type="date" className="form-control" id="fecha" onChange={(e) => setFecha(e.target.value)} value={fecha} required/>
                             {/* <input type="date" className="form-control" id="fecha" value={fecha}/> */}
                         </div>
                     </form>
