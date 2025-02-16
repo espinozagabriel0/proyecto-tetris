@@ -155,11 +155,7 @@ export default function JuegoVista() {
     }
   }
 
-  // const registrarPartida = () => {
-
-  // }
-
-
+ 
   useEffect(() => {
     if (partidaEmpezada) {
       window.addEventListener('keydown', controlTeclas)
@@ -169,6 +165,7 @@ export default function JuegoVista() {
     }
   }, [partidaEmpezada])
 
+  
   useEffect(() => {
     if (partidaEmpezada) {
       pintarPieza()

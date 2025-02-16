@@ -9,7 +9,6 @@ body{
   background: url("/public/img/fondo.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  // background-attachment: scroll;
   min-height: 100vh;
 }
 
@@ -36,29 +35,3 @@ section.vista{
   height: 2.2rem;
   width: 10px;
 }
-
-// Criterios de Aceptación ✅
-
-//     Puntuación:
-//         Incrementar 10 puntos por movimiento a la derecha, izquierda o abajo.
-//         Añadir 20 puntos cuando la pieza gira.
-//         Añadir 50 puntos cuando la pieza llega al suelo.
-
-//     Guardar Partida:
-//         Finalizar la partida cuando la pieza llega al suelo y mostrar la opción de guardado.
-//         Utilizar la función registraPartida() para guardar la partida.
-//         Utilizar el formulario de la vista Partidas para recopilar la información.
-//         Después de guardar, mostrar la vista de Partidas Jugadas.
-
-//     Vista Ranking:
-//         Crear la vista Ranking que muestre a los mejores jugadores.
-
-
-// Tareas 📌
-
-//     Tarea 1: Implementar el sistema de puntuación según las acciones.
-//     Tarea 2: Modificar el flujo del juego para finalizar la partida cuando sea necesario.
-//     Tarea 3: Crear la funcionalidad para guardar la partida con registraPartida().
-//     Tarea 4: Reutilizar el formulario de la vista Partidas para guardar los datos.
-//     Tarea 5: Después de guardar, redirigir a la vista Partidas.
-//     Tarea 6: Desarrollar la vista Ranking con la lista de los mejores jugadores.
