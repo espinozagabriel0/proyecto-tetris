@@ -150,6 +150,10 @@ export default function JuegoVista() {
     }
   }
 
+  const registrarPartida = () => {
+
+  }
+
 
   useEffect(() => {
     if (partidaEmpezada) {
@@ -173,7 +177,10 @@ export default function JuegoVista() {
           clearInterval(intervalID)
         }
       } else {
+        // la partida ha acabados
         setPuntos((pts) => pts + 50)
+        setPartidaEmpezada(false)
+        
         // mostrar la opcion de guardado de partida
 
         // insertarNuevaPieza()
@@ -183,6 +190,13 @@ export default function JuegoVista() {
 
   return (
     <section className="vista-juego p-2">
+      {/* mostrar cuando la pieza llega al suelo */}
+      {!partidaEmpezada && puntos > 0 && (
+        <div className="text-white p-2 text-center">
+          <button className="btn btn-dark">GUARDAR PARTIDA</button>
+        </div>
+      )}
+
       <div className="d-flex gap-5 text-white mx-auto p-2" style={{maxWidth: "80rem", fontSize: "1.75rem", width: "100%"}}>
         <section className="d-flex flex-column justify-content-between">
           <div className="rounded p-4 text-center border bg-black bg-opacity-50">Guardado</div>
