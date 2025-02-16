@@ -11,6 +11,7 @@ export default function JuegoVista() {
   const piezaInicial = nuevaPieza(0, Math.floor(Math.random() * 10) + 1)
   const [piezaActual, setPiezaActual] = useState(piezaInicial)
   const [partidaEmpezada, setPartidaEmpezada] = useState(false) 
+  const [puntos, setPuntos] = useState(0)
 
   // Función para comprobar si una pieza puede colocarse en una columna
   const canSetPieza = (col, lengthPieza) => {
@@ -69,22 +70,27 @@ export default function JuegoVista() {
   const girarPieza = () => {
     setPiezaActual(prevPieza => {
 
-      // se borra la pieza actual, para no crear estelas
-      borrarPieza(prevPieza.fila, prevPieza.columna, prevPieza.matriz)
+      if(prevPieza.columna > 1 && prevPieza.fila + prevPieza.matriz.length < 21){
+        // se borra la pieza actual, para no crear estelas
+        borrarPieza(prevPieza.fila, prevPieza.columna, prevPieza.matriz)
+  
+        let nuevoAngulo = prevPieza.angulo;
+  
+        if (nuevoAngulo < 3) {
+          nuevoAngulo++
+        }else{
+          nuevoAngulo = 0
+        }
+  
+        setPuntos((pts) => pts + 20)
+        return { 
+          ...prevPieza,
+          angulo: nuevoAngulo,
+          matriz: prevPieza.matrices[nuevoAngulo]
+        }
 
-      let nuevoAngulo = prevPieza.angulo;
-
-      if (nuevoAngulo < 3) {
-        nuevoAngulo++
-      }else{
-        nuevoAngulo = 0
       }
-
-      return { 
-        ...prevPieza,
-        angulo: nuevoAngulo,
-        matriz: prevPieza.matrices[nuevoAngulo]
-      }
+      return prevPieza
     })
   }
 
@@ -93,7 +99,7 @@ export default function JuegoVista() {
       
       if (prevPieza.fila + prevPieza.matriz.length < 21) {
         borrarPieza(prevPieza.fila, prevPieza.columna, prevPieza.matriz)
-        
+        setPuntos((pts) => pts + 10)
         return {...prevPieza, fila: prevPieza.fila + 1}
       }
       return prevPieza
@@ -105,7 +111,7 @@ export default function JuegoVista() {
       
       if (prevPieza.columna > 1 && prevPieza.fila + prevPieza.matriz.length < 21) {
         borrarPieza(prevPieza.fila, prevPieza.columna, prevPieza.matriz)
-
+        setPuntos((pts) => pts + 10)
         return {...prevPieza, columna: prevPieza.columna - 1}
       }
       return prevPieza
@@ -118,7 +124,7 @@ export default function JuegoVista() {
       
       if (prevPieza.columna + prevPieza.matriz[0].length <= 10 && prevPieza.fila + prevPieza.matriz.length < 21) {
         borrarPieza(prevPieza.fila, prevPieza.columna, prevPieza.matriz)
-
+        setPuntos((pts) => pts + 10)
         return {...prevPieza, columna: prevPieza.columna + 1}
       }
       return prevPieza
@@ -146,11 +152,13 @@ export default function JuegoVista() {
 
 
   useEffect(() => {
-    window.addEventListener('keydown', controlTeclas)
-    return () => {
-      window.removeEventListener('keydown', controlTeclas)
+    if (partidaEmpezada) {
+      window.addEventListener('keydown', controlTeclas)
+      return () => {
+        window.removeEventListener('keydown', controlTeclas)
+      }
     }
-  }, [])
+  }, [partidaEmpezada])
 
   useEffect(() => {
     if (partidaEmpezada) {
@@ -165,7 +173,10 @@ export default function JuegoVista() {
           clearInterval(intervalID)
         }
       } else {
-        insertarNuevaPieza()
+        setPuntos((pts) => pts + 50)
+        // mostrar la opcion de guardado de partida
+
+        // insertarNuevaPieza()
       }
     }
   }, [piezaActual, partidaEmpezada])
@@ -187,7 +198,7 @@ export default function JuegoVista() {
             <hr />
             <div className="d-flex flex-column align-items-center justify-content-center">
               <p>Puntuación</p>
-              <span>0</span>
+              <span>{puntos}</span>
             </div>
             <hr />
             <div className="d-flex flex-column align-items-center justify-content-center">
