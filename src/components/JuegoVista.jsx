@@ -10,7 +10,7 @@ export default function JuegoVista() {
   
   const piezaInicial = nuevaPieza(0, Math.floor(Math.random() * 10) + 1)
   const [piezaActual, setPiezaActual] = useState(piezaInicial)
-
+  const [partidaEmpezada, setPartidaEmpezada] = useState(false) 
 
   // Función para comprobar si una pieza puede colocarse en una columna
   const canSetPieza = (col, lengthPieza) => {
@@ -28,15 +28,19 @@ export default function JuegoVista() {
     setPiezaActual(nuevaPieza(0, colRandom))
   }
 
+  // const hayColision = () => {
+    
+  // }
+
   const pintarPieza = () => {
     const copiaCasillas = arrayCasillas.matriz
     
     piezaActual.matriz.forEach((fila, rowIndex) => {
       if (piezaActual.fila + rowIndex < 21) { 
         fila.forEach((col, colIndex) => {
-
           // limites panel izq, der
           if (col !== 0 && piezaActual.columna + colIndex > 0 && piezaActual.columna + colIndex < 11) { 
+            // col hace referencia a la columna actual del array de piezaActual, NO  de arraycasillas.matriz
             copiaCasillas[piezaActual.fila + rowIndex][piezaActual.columna + colIndex] = col
           }
         })
@@ -149,31 +153,33 @@ export default function JuegoVista() {
   }, [])
 
   useEffect(() => {
-    pintarPieza()
-    
-    if (piezaActual.fila + piezaActual.matriz.length < 21) {
-      const intervalID = setInterval(() => {
-        bajar()
-      }, 1000)
+    if (partidaEmpezada) {
+      pintarPieza()
       
-      return () => {
-        clearInterval(intervalID)
+      if (piezaActual.fila + piezaActual.matriz.length < 21 ) {
+        const intervalID = setInterval(() => {
+          bajar()
+        }, 1000)
+        
+        return () => {
+          clearInterval(intervalID)
+        }
+      } else {
+        insertarNuevaPieza()
       }
-    } else {
-      insertarNuevaPieza()
     }
-  }, [piezaActual])
+  }, [piezaActual, partidaEmpezada])
 
   return (
     <section className="vista-juego p-2">
-      <div className="d-flex gap-3 text-white mx-auto p-2" style={{maxWidth: "68rem", fontSize: "1.5rem"}}>
-        <section className="d-flex flex-column gap-2">
-          <div className="rounded p-4 text-center border">Guardado</div>
-          <div className="rounded p-4 border d-flex flex-column align-items-center justify-content-center">
+      <div className="d-flex gap-5 text-white mx-auto p-2" style={{maxWidth: "80rem", fontSize: "1.75rem", width: "100%"}}>
+        <section className="d-flex flex-column justify-content-between">
+          <div className="rounded p-4 text-center border bg-black bg-opacity-50">Guardado</div>
+          <div className="rounded p-4 border d-flex flex-column align-items-center justify-content-center bg-black bg-opacity-50">
             <p>Tiempo</p>
             <span>0</span>
           </div>
-          <div className="rounded p-4 d-flex flex-column gap-2 border">
+          <div className="rounded p-4 d-flex flex-column gap-2 border bg-black bg-opacity-50">
             <div className="d-flex flex-column align-items-center justify-content-center">
               <p>Nivel</p>
               <span>1</span>
@@ -195,12 +201,12 @@ export default function JuegoVista() {
           <Panel modelos={arrayCasillas.matriz}/>
         </div>
         
-        <section className="d-flex flex-column gap-2 p-5">
+        <section className="d-flex flex-column gap-2 bg-black bg-opacity-50 rounded">
           <div className="border rounded p-4">
             <p>Siguiente</p>
           </div>
           <div className="border rounded p-2 d-flex flex-column gap-2">
-            <button className="btn btn-success">JUGAR</button>
+            <button className="btn btn-success" onClick={() => setPartidaEmpezada(true)}>JUGAR</button>
             <button className="btn btn-info">PAUSA</button>
             <button className="mt-3 btn btn-warning" onClick={() => insertarNuevaPieza()}>
               Insertar pieza
