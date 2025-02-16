@@ -1,10 +1,10 @@
 import { useState } from "react"
 
-export default function VentanaModal({data, setData}) {
+export default function VentanaModal({data, setData, puntuacion}) {
 
     const [avatar, setAvatar] = useState('')
     const [nick, setNick] = useState('')
-    const [puntuacion, setPuntuacion] = useState('')
+    // const [puntuacion, setPuntuacion] = useState('')
     const [fecha, setFecha] = useState('')
 
 
@@ -27,7 +27,7 @@ export default function VentanaModal({data, setData}) {
     const limpiarInputs = () => {
         setAvatar("")
         setNick("")
-        setPuntuacion("")
+        // setPuntuacion("")
         setFecha("")
     }
 
@@ -51,11 +51,13 @@ export default function VentanaModal({data, setData}) {
                         </div>
                         <div className="mb-3">
                             <label htmlFor="puntos" className="col-form-label">Puntuación:</label>
-                            <input type="number" className="form-control" id="puntos" onChange={(e) => setPuntuacion(e.target.value)} value={puntuacion}/>
+                            {/* <input type="number" className="form-control" id="puntos" onChange={(e) => setPuntuacion(e.target.value)} value={puntuacion}/> */}
+                            <input type="number" className="form-control" id="puntos" value={puntuacion}/>
                         </div>
                         <div className="mb-3">
                             <label htmlFor="fecha" className="col-form-label">Fecha:</label>
                             <input type="date" className="form-control" id="fecha" onChange={(e) => setFecha(e.target.value)} value={fecha}/>
+                            {/* <input type="date" className="form-control" id="fecha" value={fecha}/> */}
                         </div>
                     </form>
                 </div>

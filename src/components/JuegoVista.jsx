@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { modelos } from "../lib/modelos"
 import Panel from "./Panel"
 import Pieza from "./Pieza"
 import { nuevaPieza } from "../lib/nuevaPieza"
 import { modeloPieza } from "../lib/modeloPiezaClass"
+import VentanaModal from "./VentanaModal";
+import { PartidaContext } from "../context/PartidaContext"
 
 export default function JuegoVista() {
   const [arrayCasillas, setArrayCasillas] = useState(modelos)
@@ -12,6 +14,9 @@ export default function JuegoVista() {
   const [piezaActual, setPiezaActual] = useState(piezaInicial)
   const [partidaEmpezada, setPartidaEmpezada] = useState(false) 
   const [puntos, setPuntos] = useState(0)
+
+
+  const {data, setData} = useContext(PartidaContext)
 
   // Función para comprobar si una pieza puede colocarse en una columna
   const canSetPieza = (col, lengthPieza) => {
@@ -150,9 +155,9 @@ export default function JuegoVista() {
     }
   }
 
-  const registrarPartida = () => {
+  // const registrarPartida = () => {
 
-  }
+  // }
 
 
   useEffect(() => {
@@ -177,11 +182,10 @@ export default function JuegoVista() {
           clearInterval(intervalID)
         }
       } else {
-        // la partida ha acabados
+        // la partida ha acabado, mostrar la opcion de guardado de partida
         setPuntos((pts) => pts + 50)
         setPartidaEmpezada(false)
-        
-        // mostrar la opcion de guardado de partida
+
 
         // insertarNuevaPieza()
       }
@@ -192,9 +196,16 @@ export default function JuegoVista() {
     <section className="vista-juego p-2">
       {/* mostrar cuando la pieza llega al suelo */}
       {!partidaEmpezada && puntos > 0 && (
-        <div className="text-white p-2 text-center">
-          <button className="btn btn-dark">GUARDAR PARTIDA</button>
-        </div>
+        <>
+          <div className="p-2 text-white text-center">
+            {/* <button type="button" className="btn btn-dark" data-bs-toggle="modal" onClick={}>GUARDAR PARTIDA</button> */}
+            <button type="button" className="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
+              GUARDAR PARTIDA
+            </button>
+
+          </div>
+          <VentanaModal data={data} setData={setData} puntuacion={puntos} />
+        </>
       )}
 
       <div className="d-flex gap-5 text-white mx-auto p-2" style={{maxWidth: "80rem", fontSize: "1.75rem", width: "100%"}}>
