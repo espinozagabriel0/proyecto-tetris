@@ -34,10 +34,30 @@ export default function JuegoVista() {
     setPiezaActual(nuevaPieza(0, colRandom))
   }
 
-  // const hayColision = () => {
-    
-  // }
-
+  //  una función de devuelve verdadero o falso si existen coincidencia de casillas solidas en el panel para las posiciones de piezaActual o, por el contrario, se puede pintar la pieza.
+  // const hayColision = (filaPieza, colPieza, matriz) => {
+  //   const copiaCasillas = arrayCasillas.matriz;
+  
+  //   for (let rowIndex = 0; rowIndex < matriz.length; rowIndex++) {
+  //     for (let colIndex = 0; colIndex < matriz[rowIndex].length; colIndex++) {
+  //       if (matriz[rowIndex][colIndex] > 0) { 
+  //         // colision con limites panel
+  //         if (filaPieza + rowIndex >= 21 || colPieza + colIndex < 0 || colPieza + colIndex >= 10) {
+  //           return true; 
+  //         }
+  
+  //         // colision con otro solido
+  //         if (copiaCasillas[filaPieza + rowIndex][colPieza + colIndex] > 0) {
+  //           return true; 
+  //         }
+  //       }
+  //     }
+  //   }
+  
+  //   return false; // No hay colisión
+  // };
+  
+  
   const pintarPieza = () => {
     const copiaCasillas = arrayCasillas.matriz
     
@@ -101,7 +121,7 @@ export default function JuegoVista() {
 
   const bajar = () => {
     setPiezaActual(prevPieza => {
-      
+      // !hayColision(prevPieza.fila + 1, prevPieza.columna, prevPieza.matriz) &&
       if (prevPieza.fila + prevPieza.matriz.length < 21) {
         borrarPieza(prevPieza.fila, prevPieza.columna, prevPieza.matriz)
         setPuntos((pts) => pts + 10)
@@ -113,8 +133,11 @@ export default function JuegoVista() {
 
   const moverIzq = () => {
     setPiezaActual(prevPieza => {
+
+      // !hayColision(prevPieza.fila, prevPieza.columna - 1, prevPieza.matriz) && 
       
       if (prevPieza.columna > 1 && prevPieza.fila + prevPieza.matriz.length < 21) {
+        
         borrarPieza(prevPieza.fila, prevPieza.columna, prevPieza.matriz)
         setPuntos((pts) => pts + 10)
         return {...prevPieza, columna: prevPieza.columna - 1}
@@ -165,7 +188,7 @@ export default function JuegoVista() {
     }
   }, [partidaEmpezada])
 
-  
+
   useEffect(() => {
     if (partidaEmpezada) {
       pintarPieza()
@@ -181,10 +204,10 @@ export default function JuegoVista() {
       } else {
         // la partida ha acabado, mostrar la opcion de guardado de partida
         setPuntos((pts) => pts + 50)
-        setPartidaEmpezada(false)
+        // setPartidaEmpezada(false)
 
 
-        // insertarNuevaPieza()
+        insertarNuevaPieza()
       }
     }
   }, [piezaActual, partidaEmpezada])
