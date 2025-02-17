@@ -15,7 +15,7 @@ export default function JuegoVista() {
   const [partidaEmpezada, setPartidaEmpezada] = useState(false) 
   const [puntos, setPuntos] = useState(0)
   const [lineas, setLineas] = useState(0)
-
+  const [gameOver, setGameover] = useState(false)
 
   const {data, setData} = useContext(PartidaContext)
 
@@ -32,7 +32,14 @@ export default function JuegoVista() {
       colRandom = 11 - piezaActual.matriz[0].length 
     }
     
-    setPiezaActual(nuevaPieza(0, colRandom))
+    const piezaGenerada = nuevaPieza(0, colRandom) 
+    
+    if (hayColisionDown(piezaGenerada.fila, piezaGenerada.columna, piezaGenerada.matriz, arrayCasillas) ) {
+      // || hayColisionHorizontal((nuevaPieza.fila, nuevaPieza.columna, nuevaPieza.matriz, arrayCasillas, 'left')
+      setGameover(true)
+    }else{
+      setPiezaActual(nuevaPieza)
+    }
   }
 
   //  una función de devuelve verdadero o falso si existen coincidencia de casillas solidas en el panel para las posiciones de piezaActual o, por el contrario, se puede pintar la pieza.
@@ -289,7 +296,7 @@ const borrarFila = (fila) => {
 
 
   useEffect(() => {
-    if (partidaEmpezada) {
+    if (partidaEmpezada && !gameOver) {
       pintarPieza()
   
       // Comprobar si hay fila completa y borrarla
@@ -316,8 +323,10 @@ const borrarFila = (fila) => {
         setPuntos((pts) => pts + 50)
         insertarNuevaPieza()
       }
+    }else{
+      console.log("game over!")
     }
-  }, [piezaActual, partidaEmpezada])
+  }, [piezaActual, partidaEmpezada, gameOver])
   
 
   return (
