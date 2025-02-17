@@ -11,7 +11,7 @@ export default function Panel({modelos}) {
               <div 
                 key={index} 
                 id="celdas"
-                className={`col border ${colorPieza(celda)}`}
+                className={`col border border-dark ${colorPieza(celda)}`}
               >
                 {/* {celda} */}
               </div>
