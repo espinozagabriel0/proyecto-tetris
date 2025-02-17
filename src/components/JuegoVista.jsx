@@ -35,28 +35,98 @@ export default function JuegoVista() {
   }
 
   //  una función de devuelve verdadero o falso si existen coincidencia de casillas solidas en el panel para las posiciones de piezaActual o, por el contrario, se puede pintar la pieza.
-  // const hayColision = (filaPieza, colPieza, matriz) => {
-  //   const copiaCasillas = arrayCasillas.matriz;
+  const hayColisionDown = (filaPieza, colPieza, matrizPieza, arrayCasillas) => {
+    const copiaCasillas = arrayCasillas.matriz;
   
-  //   for (let rowIndex = 0; rowIndex < matriz.length; rowIndex++) {
-  //     for (let colIndex = 0; colIndex < matriz[rowIndex].length; colIndex++) {
-  //       if (matriz[rowIndex][colIndex] > 0) { 
-  //         // colision con limites panel
-  //         if (filaPieza + rowIndex >= 21 || colPieza + colIndex < 0 || colPieza + colIndex >= 10) {
-  //           return true; 
-  //         }
+    // Para cada columna de la pieza
+    for (let colIndex = 0; colIndex < matrizPieza[0].length; colIndex++) {
+      // Encontrar el elemento sólido más bajo en esta columna de la pieza
+      let ultimaFilaSolida = -1;
+      for (let filaIndex = matrizPieza.length - 1; filaIndex >= 0; filaIndex--) {
+        if (matrizPieza[filaIndex][colIndex] > 0) {
+          ultimaFilaSolida = filaIndex;
+          break;
+        }
+      }
+
+      // Si encontramos un sólido en esta columna
+      if (ultimaFilaSolida !== -1) {
+        const filaAVerificar = filaPieza + 1 + ultimaFilaSolida;
+        const colAVerificar = colPieza + colIndex;
+
+        // Verificar si hay colisión en la posición exacta bajo el sólido
+        if (filaAVerificar >= 0 && filaAVerificar < 21 && colAVerificar >= 0 && colAVerificar < 11 && copiaCasillas[filaAVerificar][colAVerificar] > 0) {
+          return true;
+        }
+
+        // Verificar límites del tablero
+        if (filaAVerificar >= 21) {
+          return true;
+        }
+      }
+    }
   
-  //         // colision con otro solido
-  //         if (copiaCasillas[filaPieza + rowIndex][colPieza + colIndex] > 0) {
-  //           return true; 
-  //         }
-  //       }
-  //     }
-  //   }
+    return false;
+  };
+
+const hayColisionHorizontal = (filaPieza, colPieza, matrizPieza, arrayCasillas, direction) => {
+    const copiaCasillas = arrayCasillas.matriz;
+    let colIncremento = 0;
   
-  //   return false; // No hay colisión
-  // };
+    switch (direction) {
+      case 'left':
+        colIncremento = -1;
+        break;
+      case 'right':
+        colIncremento = 1;
+        break;
+      default:
+        return false; 
+    }
   
+    // Para cada fila de la pieza
+    for (let filaIndex = 0; filaIndex < matrizPieza.length; filaIndex++) {
+
+      let ladoSolido = -1;
+
+      if (direction === 'left') {
+        // Encontrar el elemento sólido más a la izquierda en esta fila de la pieza
+        for (let colIndex = 0; colIndex < matrizPieza[filaIndex].length; colIndex++) {
+          if (matrizPieza[filaIndex][colIndex] > 0) {
+            ladoSolido = colIndex;
+            break;
+          }
+        }
+      } else {
+        // Encontrar el elemento sólido más a la derecha en esta fila de la pieza
+        for (let colIndex = matrizPieza[filaIndex].length - 1; colIndex >= 0; colIndex--) {
+          if (matrizPieza[filaIndex][colIndex] > 0) {
+            ladoSolido = colIndex;
+            break;
+          }
+        }
+      }
+
+      // Si encontramos un sólido en esta fila
+      if (ladoSolido !== -1) {
+        const filaAVerificar = filaPieza + filaIndex;
+        const colAVerificar = colPieza + ladoSolido + colIncremento;
+
+        // Verificar si hay colisión en la posición exacta al lado del sólido
+        if (filaAVerificar >= 0 && filaAVerificar < 21 && colAVerificar >= 0 && colAVerificar < 11 && copiaCasillas[filaAVerificar][colAVerificar] > 0) {
+          return true;
+        }
+
+        // Verificar límites del tablero
+        if (colAVerificar < 0 || colAVerificar >= 11) {
+          return true;
+        }
+      }
+    }
+  
+    return false;
+  };
+
   
   const pintarPieza = () => {
     const copiaCasillas = arrayCasillas.matriz
@@ -119,46 +189,43 @@ export default function JuegoVista() {
     })
   }
 
-  const bajar = () => {
-    setPiezaActual(prevPieza => {
-      // !hayColision(prevPieza.fila + 1, prevPieza.columna, prevPieza.matriz) &&
-      if (prevPieza.fila + prevPieza.matriz.length < 21) {
-        borrarPieza(prevPieza.fila, prevPieza.columna, prevPieza.matriz)
-        setPuntos((pts) => pts + 10)
-        return {...prevPieza, fila: prevPieza.fila + 1}
-      }
-      return prevPieza
-    })
-  }
-
   const moverIzq = () => {
-    setPiezaActual(prevPieza => {
+  setPiezaActual(prevPieza => {
+    if (!hayColisionHorizontal(prevPieza.fila, prevPieza.columna, prevPieza.matriz, arrayCasillas, 'left') && 
+        prevPieza.columna > 1 && prevPieza.fila + prevPieza.matriz.length < 21) {
+      borrarPieza(prevPieza.fila, prevPieza.columna, prevPieza.matriz);
+      setPuntos((pts) => pts + 10);
+      return {...prevPieza, columna: prevPieza.columna - 1};
+    }
+    return prevPieza;
+  });
+};
 
-      // !hayColision(prevPieza.fila, prevPieza.columna - 1, prevPieza.matriz) && 
-      
-      if (prevPieza.columna > 1 && prevPieza.fila + prevPieza.matriz.length < 21) {
-        
-        borrarPieza(prevPieza.fila, prevPieza.columna, prevPieza.matriz)
-        setPuntos((pts) => pts + 10)
-        return {...prevPieza, columna: prevPieza.columna - 1}
-      }
-      return prevPieza
-    })
-  }
+const moverDra = () => {
+  setPiezaActual(prevPieza => {
+    if (!hayColisionHorizontal(prevPieza.fila, prevPieza.columna, prevPieza.matriz, arrayCasillas, 'right') && prevPieza.columna + prevPieza.matriz[0].length <= 10 && prevPieza.fila + prevPieza.matriz.length < 21) {
+      borrarPieza(prevPieza.fila, prevPieza.columna, prevPieza.matriz);
+      setPuntos((pts) => pts + 10);
+      return {...prevPieza, columna: prevPieza.columna + 1};
+    }
+    return prevPieza;
+  });
+};
 
+const bajar = () => {
+  setPiezaActual(prevPieza => {
+    if (!hayColisionDown(prevPieza.fila, prevPieza.columna, prevPieza.matriz, arrayCasillas) &&
+        prevPieza.fila + prevPieza.matriz.length < 21) {
+      borrarPieza(prevPieza.fila, prevPieza.columna, prevPieza.matriz);
+      setPuntos((pts) => pts + 10);
+      return {...prevPieza, fila: prevPieza.fila + 1};
+    }
+    insertarNuevaPieza()
+    return prevPieza;
+  });
+};
 
-  const moverDra = () => {
-    setPiezaActual(prevPieza => {
-      
-      if (prevPieza.columna + prevPieza.matriz[0].length <= 10 && prevPieza.fila + prevPieza.matriz.length < 21) {
-        borrarPieza(prevPieza.fila, prevPieza.columna, prevPieza.matriz)
-        setPuntos((pts) => pts + 10)
-        return {...prevPieza, columna: prevPieza.columna + 1}
-      }
-      return prevPieza
-    })
-  }
-
+  
   const controlTeclas = (event) => {
     switch (event.key) {
       case 'ArrowUp':
@@ -202,7 +269,6 @@ export default function JuegoVista() {
           clearInterval(intervalID)
         }
       } else {
-        // la partida ha acabado, mostrar la opcion de guardado de partida
         setPuntos((pts) => pts + 50)
         // setPartidaEmpezada(false)
 
