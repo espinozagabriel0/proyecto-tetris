@@ -14,6 +14,7 @@ export default function JuegoVista() {
   const [piezaActual, setPiezaActual] = useState(piezaInicial)
   const [partidaEmpezada, setPartidaEmpezada] = useState(false) 
   const [puntos, setPuntos] = useState(0)
+  const [lineas, setLineas] = useState(0)
 
 
   const {data, setData} = useContext(PartidaContext)
@@ -264,17 +265,18 @@ const borrarFila = (fila) => {
 
   // funcion que me retorna la fila, con valores > 0
   const hayFilaCompleta = () => {
-    const copiaCasillas = arrayCasillas.matriz
-    
-    for (let i = 0; i < copiaCasillas.length; i++) {
-      if (copiaCasillas[i].every(celda => celda !== 0)) {
-        return i // Retorna el índice de la fila completa
-      }
+    const copiaCasillas = arrayCasillas.matriz;
+
+    for (let i = 1; i < copiaCasillas.length - 1; i++) {
+        // comprobar si en cada celda de la fila el valor es mayor a 0
+        if (copiaCasillas[i].slice(1, 11).every(celda => celda > 0)) { //considerando bordes
+            return true; // retorna true si encuentra fila completa
+        }
     }
-    
-    return -1 // Retorna -1 si no hay fila completa
-  }
-  
+
+    return false; // retorna  falso si no encuentra fila completa
+};
+
  
   useEffect(() => {
     if (partidaEmpezada) {
@@ -286,33 +288,37 @@ const borrarFila = (fila) => {
   }, [partidaEmpezada])
 
 
-useEffect(() => {
-  if (partidaEmpezada) {
-    pintarPieza()
+  useEffect(() => {
+    if (partidaEmpezada) {
+      pintarPieza()
+  
+      // Comprobar si hay fila completa y borrarla
+      if (hayFilaCompleta()) {
+        const filaCompleta = arrayCasillas.matriz.findIndex(fila => fila.every(celda => celda > 0));
 
-    // Comprobar si hay fila completa y borrarla
-    const filaCompleta = hayFilaCompleta()
-    if (filaCompleta !== -1) {
-      // console.log(filaCompleta)
-      borrarFila(filaCompleta)
-      // Aquí podrías añadir lógica adicional, como incrementar la puntuación
-      setPuntos((pts) => pts + 100) // Por ejemplo, 100 puntos por fila completa
-    }
-    
-    if (piezaActual.fila + piezaActual.matriz.length < 21) {
-      const intervalID = setInterval(() => {
-        bajar()
-      }, 1000)
-      
-      return () => {
-        clearInterval(intervalID)
+        console.log("Fila completa encontrada en el indice: ", filaCompleta);
+        
+        if (filaCompleta !== -1) {
+          borrarFila(filaCompleta);
+          setLineas((linea) => linea + 1)
+        }
       }
-    } else {
-      setPuntos((pts) => pts + 50)
-      insertarNuevaPieza()
+      
+      if (piezaActual.fila + piezaActual.matriz.length < 21) {
+        const intervalID = setInterval(() => {
+          bajar()
+        }, 1000)
+        
+        return () => {
+          clearInterval(intervalID)
+        }
+      } else {
+        setPuntos((pts) => pts + 50)
+        insertarNuevaPieza()
+      }
     }
-  }
-}, [piezaActual, partidaEmpezada])
+  }, [piezaActual, partidaEmpezada])
+  
 
   return (
     <section className="vista-juego p-2">
@@ -350,7 +356,7 @@ useEffect(() => {
             <hr />
             <div className="d-flex flex-column align-items-center justify-content-center">
               <p>Lineas</p>
-              <span>0</span>
+              <span>{lineas}</span>
             </div>
           </div>
         </section>
