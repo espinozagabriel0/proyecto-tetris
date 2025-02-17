@@ -225,6 +225,22 @@ const bajar = () => {
   });
 };
 
+
+// funcion que borra toda la fila de arrayCasillas, pasada por parametro
+const borrarFila = (fila) => {
+  const copiaCasillas = arrayCasillas.matriz
+
+  // Eliminar la fila completa
+  copiaCasillas.splice(fila, 1)
+
+  // Añadir una nueva fila vacía en la parte superior
+  copiaCasillas.unshift([1,0,0,0,0,0,0,0,0,0,0,1])
+
+  // Actualizar el estado de arrayCasillas
+  setArrayCasillas({...arrayCasillas, matriz: copiaCasillas})
+}
+
+
   
   const controlTeclas = (event) => {
     switch (event.key) {
@@ -245,6 +261,20 @@ const bajar = () => {
     }
   }
 
+
+  // funcion que me retorna la fila, con valores > 0
+  const hayFilaCompleta = () => {
+    const copiaCasillas = arrayCasillas.matriz
+    
+    for (let i = 0; i < copiaCasillas.length; i++) {
+      if (copiaCasillas[i].every(celda => celda !== 0)) {
+        return i // Retorna el índice de la fila completa
+      }
+    }
+    
+    return -1 // Retorna -1 si no hay fila completa
+  }
+  
  
   useEffect(() => {
     if (partidaEmpezada) {
@@ -256,27 +286,33 @@ const bajar = () => {
   }, [partidaEmpezada])
 
 
-  useEffect(() => {
-    if (partidaEmpezada) {
-      pintarPieza()
-      
-      if (piezaActual.fila + piezaActual.matriz.length < 21 ) {
-        const intervalID = setInterval(() => {
-          bajar()
-        }, 1000)
-        
-        return () => {
-          clearInterval(intervalID)
-        }
-      } else {
-        setPuntos((pts) => pts + 50)
-        // setPartidaEmpezada(false)
+useEffect(() => {
+  if (partidaEmpezada) {
+    pintarPieza()
 
-
-        insertarNuevaPieza()
-      }
+    // Comprobar si hay fila completa y borrarla
+    const filaCompleta = hayFilaCompleta()
+    if (filaCompleta !== -1) {
+      // console.log(filaCompleta)
+      borrarFila(filaCompleta)
+      // Aquí podrías añadir lógica adicional, como incrementar la puntuación
+      setPuntos((pts) => pts + 100) // Por ejemplo, 100 puntos por fila completa
     }
-  }, [piezaActual, partidaEmpezada])
+    
+    if (piezaActual.fila + piezaActual.matriz.length < 21) {
+      const intervalID = setInterval(() => {
+        bajar()
+      }, 1000)
+      
+      return () => {
+        clearInterval(intervalID)
+      }
+    } else {
+      setPuntos((pts) => pts + 50)
+      insertarNuevaPieza()
+    }
+  }
+}, [piezaActual, partidaEmpezada])
 
   return (
     <section className="vista-juego p-2">
