@@ -21,9 +21,9 @@ export default function Panel({modelos}) {
       </div>
     )
   }
-  // Tarea 4 - Contador de Líneas y Puntos: Añadir un contador de líneas eliminadas y puntos acumulados.
 
-  // Tarea 5 - Final de Partida: Detectar el final de la partida cuando ya no pueden aparecer más piezas y mostrar un mensaje informativo.
+  // Tarea 5 - Final de Partida: Detectar el final de la partida cuando ya no pueden aparecer más piezas y 
+  // mostrar un mensaje informativo.
 
   // Tarea 6 - Piezas Siguientes: Mostrar las piezas siguientes en un panel lateral.
 

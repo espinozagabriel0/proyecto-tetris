@@ -27,18 +27,19 @@ export default function JuegoVista() {
   // Función para crear y colocar una nueva pieza en el tablero
   const insertarNuevaPieza = () => {    
     let colRandom = Math.floor(Math.random() * 10) + 1
-
+  
     if (!canSetPieza(colRandom, piezaActual.matriz[0].length)) {
       colRandom = 11 - piezaActual.matriz[0].length 
     }
     
     const piezaGenerada = nuevaPieza(0, colRandom) 
     
-    if (hayColisionDown(piezaGenerada.fila, piezaGenerada.columna, piezaGenerada.matriz, arrayCasillas) ) {
-      // || hayColisionHorizontal((nuevaPieza.fila, nuevaPieza.columna, nuevaPieza.matriz, arrayCasillas, 'left')
+    if (hayColisionDown(piezaGenerada.fila, piezaGenerada.columna, piezaGenerada.matriz, arrayCasillas)) {
       setGameover(true)
-    }else{
-      setPiezaActual(nuevaPieza)
+      console.log('pieza generada que haria colision: ', piezaGenerada.nombre)
+      console.log('fila y columna: ', piezaGenerada.fila, piezaActual.columna)
+    } else {
+      setPiezaActual(piezaGenerada) 
     }
   }
 
@@ -302,8 +303,6 @@ const borrarFila = (fila) => {
       // Comprobar si hay fila completa y borrarla
       if (hayFilaCompleta()) {
         const filaCompleta = arrayCasillas.matriz.findIndex(fila => fila.every(celda => celda > 0));
-
-        console.log("Fila completa encontrada en el indice: ", filaCompleta);
         
         if (filaCompleta !== -1) {
           borrarFila(filaCompleta);
@@ -323,8 +322,13 @@ const borrarFila = (fila) => {
         setPuntos((pts) => pts + 50)
         insertarNuevaPieza()
       }
-    }else{
-      console.log("game over!")
+
+
+      // si hay game over parar juego y mostrar mensaje
+    } else if (gameOver) {
+      setPartidaEmpezada(false)
+      console.log("GAME OVER: No se pueden insertar mas piezas.")
+
     }
   }, [piezaActual, partidaEmpezada, gameOver])
   
@@ -332,10 +336,10 @@ const borrarFila = (fila) => {
   return (
     <section className="vista-juego p-2">
       {/* mostrar cuando la pieza llega al suelo */}
-      {!partidaEmpezada && puntos > 0 && (
+      {!partidaEmpezada && puntos > 0 && gameOver && (
         <>
-          <div className="p-2 text-white text-center">
-            {/* <button type="button" className="btn btn-dark" data-bs-toggle="modal" onClick={}>GUARDAR PARTIDA</button> */}
+          <div className="p-2 text-white text-center bg-dark bg-opacity-50 rounded p-3 my-3">
+            <p>La partida ha terminado!</p>
             <button type="button" className="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
               GUARDAR PARTIDA
             </button>
