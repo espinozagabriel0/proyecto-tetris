@@ -16,6 +16,7 @@ export default function JuegoVista() {
   const [puntos, setPuntos] = useState(0)
   const [lineas, setLineas] = useState(0)
   const [gameOver, setGameover] = useState(false)
+  const [piezasSiguientes, setPiezasSiguientes] = useState([])
 
   const {data, setData} = useContext(PartidaContext)
 
@@ -26,20 +27,37 @@ export default function JuegoVista() {
 
   // Función para crear y colocar una nueva pieza en el tablero
   const insertarNuevaPieza = () => {    
-    let colRandom = Math.floor(Math.random() * 10) + 1
-  
-    if (!canSetPieza(colRandom, piezaActual.matriz[0].length)) {
-      colRandom = 11 - piezaActual.matriz[0].length 
+    let nuevaActual;
+    let nuevasSiguientes = piezasSiguientes
+    
+
+    // bloque para obtener pieza ACTUAL. Si hay uno o mas piezas siguientes, OBTENER LA PRIMERA, SINO, Generar una.
+    if (nuevasSiguientes.length > 0) {
+      nuevaActual = nuevasSiguientes.shift(); // quitar y obtener primera pieza del array piezas siguientes
+    } else {
+      // si esta vacio, generar pieza nueva ACTUAL
+      let colRandom = Math.floor(Math.random() * 10) + 1
+      if (!canSetPieza(colRandom, piezaActual.matriz[0].length)) {
+        colRandom = 11 - piezaActual.matriz[0].length 
+      }
+      nuevaActual = nuevaPieza(0, colRandom);
     }
     
-    const piezaGenerada = nuevaPieza(0, colRandom) 
+
+    // Bloque para llenar array piezasSiguientes. 
+    // Llena array para que hayan siempre 3 piezas siguientes
+    while (nuevasSiguientes.length < 3) {
+      let colRandom = Math.floor(Math.random() * 10) + 1
+      nuevasSiguientes.push(nuevaPieza(0, colRandom))
+    }
     
-    if (hayColisionDown(piezaGenerada.fila, piezaGenerada.columna, piezaGenerada.matriz, arrayCasillas)) {
+    // comprobar colision antes de insertar, para GAME OVER y sino, insertar pieza actual y actualizar piezas siguientes
+    if (hayColisionDown(nuevaActual.fila, nuevaActual.columna, nuevaActual.matriz, arrayCasillas)) {
       setGameover(true)
-      console.log('pieza generada que haria colision: ', piezaGenerada.nombre)
-      console.log('fila y columna: ', piezaGenerada.fila, piezaActual.columna)
+      console.log('GAME OVER: Colisión detectada al generar nueva pieza')
     } else {
-      setPiezaActual(piezaGenerada) 
+      setPiezaActual(nuevaActual)
+      setPiezasSiguientes(nuevasSiguientes)
     }
   }
 
@@ -248,27 +266,25 @@ const borrarFila = (fila) => {
   // Actualizar el estado de arrayCasillas
   setArrayCasillas({...arrayCasillas, matriz: copiaCasillas})
 }
-
-
   
-  const controlTeclas = (event) => {
-    switch (event.key) {
-      case 'ArrowUp':
-        girarPieza()
-        break;
-      case 'ArrowDown':
-        bajar()
-        break;
-      case 'ArrowLeft':
-        moverIzq()
-        break;
-      case 'ArrowRight':
-        moverDra()
-        break;
-      default:
-        break;
-    }
+const controlTeclas = (event) => {
+  switch (event.key) {
+    case 'ArrowUp':
+      girarPieza()
+      break;
+    case 'ArrowDown':
+      bajar()
+      break;
+    case 'ArrowLeft':
+      moverIzq()
+      break;
+    case 'ArrowRight':
+      moverDra()
+      break;
+    default:
+      break;
   }
+}
 
 
   // funcion que me retorna la fila, con valores > 0
@@ -284,6 +300,22 @@ const borrarFila = (fila) => {
 
     return false; // retorna  falso si no encuentra fila completa
 };
+
+
+
+// crear 3 primeras piezas siguientes
+useEffect(() => {
+  if (!partidaEmpezada && piezasSiguientes.length === 0) {
+
+    // Generate initial 3 pieces for the queue
+    const initialPiezas = [];
+    for (let i = 0; i < 3; i++) {
+      let colRandom = Math.floor(Math.random() * 10) + 1
+      initialPiezas.push(nuevaPieza(0, colRandom));
+    }
+    setPiezasSiguientes(initialPiezas);
+  }
+}, [partidaEmpezada]); 
 
  
   useEffect(() => {
@@ -330,7 +362,7 @@ const borrarFila = (fila) => {
       console.log("GAME OVER: No se pueden insertar mas piezas.")
 
     }
-  }, [piezaActual, partidaEmpezada, gameOver])
+  }, [piezaActual, partidaEmpezada, gameOver, piezasSiguientes])
   
 
   return (
@@ -339,7 +371,8 @@ const borrarFila = (fila) => {
       {!partidaEmpezada && puntos > 0 && gameOver && (
         <>
           <div className="p-2 text-white text-center bg-dark bg-opacity-50 rounded p-3 my-3">
-            <p>La partida ha terminado!</p>
+            <h4>La partida ha terminado!</h4>
+            <p>Ya no pueden aparecer mas piezas.</p>
             <button type="button" className="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
               GUARDAR PARTIDA
             </button>
@@ -349,7 +382,7 @@ const borrarFila = (fila) => {
         </>
       )}
 
-      <div className="d-flex gap-5 text-white mx-auto p-2" style={{maxWidth: "80rem", fontSize: "1.75rem", width: "100%"}}>
+      <div className="d-flex gap-5 text-white mx-auto p-2 mt-2" style={{maxWidth: "80rem", fontSize: "1.75rem", width: "100%"}}>
         <section className="d-flex flex-column justify-content-between">
           <div className="rounded p-4 text-center border bg-black bg-opacity-50">Guardado</div>
           <div className="rounded p-4 border d-flex flex-column align-items-center justify-content-center bg-black bg-opacity-50">
@@ -388,6 +421,16 @@ const borrarFila = (fila) => {
             <button className="mt-3 btn btn-warning" onClick={() => insertarNuevaPieza()}>
               Insertar pieza
             </button>
+          </div>
+          {/* piezas siguientes */}
+          <div className="mt-2">
+            <div className="mt-5">
+              {piezasSiguientes.map((pieza, index) => (
+                <div className="p-4" key={index}>
+                  <Pieza matriz={pieza.matriz}/>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       </div>
