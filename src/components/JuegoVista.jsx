@@ -13,10 +13,16 @@ export default function JuegoVista() {
   const piezaInicial = nuevaPieza(0, Math.floor(Math.random() * 10) + 1)
   const [piezaActual, setPiezaActual] = useState(piezaInicial)
   const [partidaEmpezada, setPartidaEmpezada] = useState(false) 
+  
+  const [nivel, setNivel] = useState(0)
   const [puntos, setPuntos] = useState(0)
   const [lineas, setLineas] = useState(0)
+
   const [gameOver, setGameover] = useState(false)
   const [piezasSiguientes, setPiezasSiguientes] = useState([])
+
+  const [velocidad, setVelocidad] = useState(1000)
+
 
   const {data, setData} = useContext(PartidaContext)
 
@@ -212,6 +218,7 @@ const hayColisionHorizontal = (filaPieza, colPieza, matrizPieza, arrayCasillas, 
         }
 
       }
+      insertarNuevaPieza()
       return prevPieza
     })
   }
@@ -336,16 +343,26 @@ useEffect(() => {
       if (hayFilaCompleta()) {
         const filaCompleta = arrayCasillas.matriz.findIndex(fila => fila.every(celda => celda > 0));
         
+        // si hay fila completa, se borra y se incrementa lineas. Si las lineas son de 5 en 5, incrementar nivel
         if (filaCompleta !== -1) {
           borrarFila(filaCompleta);
-          setLineas((linea) => linea + 1)
+          
+          setLineas((linea) => {
+            const nuevasLineas = linea + 1;
+            if (nuevasLineas % 5 === 0) {
+              setNivel((nivel) => nivel + 1);
+              setVelocidad((velocidad) => velocidad - 200)
+            }
+            return nuevasLineas;
+          });
+
         }
       }
       
       if (piezaActual.fila + piezaActual.matriz.length < 21) {
         const intervalID = setInterval(() => {
           bajar()
-        }, 1000)
+        }, velocidad)
         
         return () => {
           clearInterval(intervalID)
@@ -392,7 +409,7 @@ useEffect(() => {
           <div className="rounded p-4 d-flex flex-column gap-2 border bg-black bg-opacity-50">
             <div className="d-flex flex-column align-items-center justify-content-center">
               <p>Nivel</p>
-              <span>1</span>
+              <span>{nivel}</span>
             </div>
             <hr />
             <div className="d-flex flex-column align-items-center justify-content-center">
@@ -407,7 +424,7 @@ useEffect(() => {
           </div>
         </section>
 
-        <div id="juego-container" className="rounded bg-dark bg-opacity-50">
+        <div id="juego-container" className="rounded ">
           <Panel modelos={arrayCasillas.matriz}/>
         </div>
         
