@@ -122,14 +122,18 @@ const hayColisionHorizontal = (filaPieza, colPieza, matrizPieza, arrayCasillas, 
 
       let ladoSolido = -1;
 
+      // Bloque para obtener, si hay, el LADO SOLIDO mas cercano en la fila donde esta la pieza
       if (direction === 'left') {
         // Encontrar el elemento sólido más a la izquierda en esta fila de la pieza
         for (let colIndex = 0; colIndex < matrizPieza[filaIndex].length; colIndex++) {
+          
+          // si es mayor a 0, hay solido
           if (matrizPieza[filaIndex][colIndex] > 0) {
             ladoSolido = colIndex;
             break;
           }
         }
+
       } else {
         // Encontrar el elemento sólido más a la derecha en esta fila de la pieza
         for (let colIndex = matrizPieza[filaIndex].length - 1; colIndex >= 0; colIndex--) {
@@ -139,6 +143,7 @@ const hayColisionHorizontal = (filaPieza, colPieza, matrizPieza, arrayCasillas, 
           }
         }
       }
+
 
       // Si encontramos un sólido en esta fila
       if (ladoSolido !== -1) {
@@ -322,7 +327,7 @@ useEffect(() => {
     }
     setPiezasSiguientes(initialPiezas);
   }
-}, [partidaEmpezada]); 
+}, [partidaEmpezada, piezasSiguientes]); 
 
  
   useEffect(() => {
@@ -395,7 +400,7 @@ useEffect(() => {
             </button>
 
           </div>
-          <VentanaModal data={data} setData={setData} puntuacion={puntos} />
+          <VentanaModal data={data} setData={setData} puntuacion={puntos} setArrayCasillas={setArrayCasillas}/>
         </>
       )}
 

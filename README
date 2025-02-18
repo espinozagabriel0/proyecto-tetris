@@ -1,0 +1,44 @@
+
+## Cómo Funciona El Juego
+
+*   ** Estados**:
+    *   `arrayCasillas`: Representa el tablero del Tetris.
+    *   `piezaActual`: La pieza que está en juego.
+    *   `partidaEmpezada`: Dice si el juego ha empezado o no.
+    *   `nivel`, `puntos`, `lineas`: Guardan el nivel, los puntos y las líneas que llevas.
+    *   `gameOver`: Dice si el juego ha terminado.
+    *   `piezasSiguientes`: Un array con las próximas piezas.
+    *   `velocidad`: La velocidad del juego.
+
+*   **Manejo de Piezas**:
+    *   `insertarNuevaPieza()`: Añade una nueva pieza al tablero.
+    *   `pintarPieza()`: Dibuja la pieza actual en el tablero.
+    *   `borrarPieza()`: Quita la pieza actual del tablero.
+
+*   **Detectar Choques**:
+    *   `hayColisionDown()`: Mira si la pieza choca cuando se mueve hacia abajo.
+    *   `hayColisionHorizontal()`: Mira si la pieza choca cuando se mueve a los lados.
+
+*   **Manejo del Tablero**:
+    *   `borrarFila()`: Elimina una fila del tablero.
+    *   `hayFilaCompleta()`: Mira si hay filas completas.
+
+*   **Mover y Rotar Piezas**:
+    *   `moverIzq()`: Mueve la pieza a la izquierda.
+    *   `moverDra()`: Mueve la pieza a la derecha.
+    *   `bajar()`: Mueve la pieza hacia abajo.
+    *   `girarPieza()`: Rota la pieza.
+
+*   **Interval**:
+    *   `useEffect` con `setInterval` para que la pieza se mueva hacia abajo automáticamente.
+
+*   **Controles del Teclado**:
+    *   `controlTeclas()`: Escucha las teclas que pulsas para mover y rotar la pieza.
+
+## Context
+
+El `PartidaContext` se usa para guardar y compartir la información del juego entre los diferentes componentes.
+
+*   `PartidaContext.js`: Tiene el "proveedor" y el "consumidor" del contexto.
+*   `useContext(PartidaContext)` en `JuegoVista.js`: Se usa para acceder y cambiar la información del juego.
+*   Aquí se tiene los datos y el setData de las partidas registradas. Para poder acceder a ellas sin pasarla por    varios props. 
