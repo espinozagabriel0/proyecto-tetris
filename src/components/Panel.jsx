@@ -21,4 +21,3 @@ export default function Panel({modelos}) {
       </div>
     )
   }
-  

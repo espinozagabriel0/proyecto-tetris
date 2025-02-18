@@ -13,7 +13,15 @@ export default function JuegoVista() {
   const piezaInicial = nuevaPieza(0, Math.floor(Math.random() * 10) + 1)
   const [piezaActual, setPiezaActual] = useState(piezaInicial)
   const [partidaEmpezada, setPartidaEmpezada] = useState(false) 
+  
+  const [nivel, setNivel] = useState(0)
   const [puntos, setPuntos] = useState(0)
+  const [lineas, setLineas] = useState(0)
+
+  const [gameOver, setGameover] = useState(false)
+  const [piezasSiguientes, setPiezasSiguientes] = useState([])
+
+  const [velocidad, setVelocidad] = useState(1000)
 
 
   const {data, setData} = useContext(PartidaContext)
@@ -25,13 +33,38 @@ export default function JuegoVista() {
 
   // Función para crear y colocar una nueva pieza en el tablero
   const insertarNuevaPieza = () => {    
-    let colRandom = Math.floor(Math.random() * 10) + 1
+    let nuevaActual;
+    let nuevasSiguientes = piezasSiguientes
+    
 
-    if (!canSetPieza(colRandom, piezaActual.matriz[0].length)) {
-      colRandom = 11 - piezaActual.matriz[0].length 
+    // bloque para obtener pieza ACTUAL. Si hay uno o mas piezas siguientes, OBTENER LA PRIMERA, SINO, Generar una.
+    if (nuevasSiguientes.length > 0) {
+      nuevaActual = nuevasSiguientes.shift(); // quitar y obtener primera pieza del array piezas siguientes
+    } else {
+      // si esta vacio, generar pieza nueva ACTUAL
+      let colRandom = Math.floor(Math.random() * 10) + 1
+      if (!canSetPieza(colRandom, piezaActual.matriz[0].length)) {
+        colRandom = 11 - piezaActual.matriz[0].length 
+      }
+      nuevaActual = nuevaPieza(0, colRandom);
     }
     
-    setPiezaActual(nuevaPieza(0, colRandom))
+
+    // Bloque para llenar array piezasSiguientes. 
+    // Llena array para que hayan siempre 3 piezas siguientes
+    while (nuevasSiguientes.length < 3) {
+      let colRandom = Math.floor(Math.random() * 10) + 1
+      nuevasSiguientes.push(nuevaPieza(0, colRandom))
+    }
+    
+    // comprobar colision antes de insertar, para GAME OVER y sino, insertar pieza actual y actualizar piezas siguientes
+    if (hayColisionDown(nuevaActual.fila, nuevaActual.columna, nuevaActual.matriz, arrayCasillas)) {
+      setGameover(true)
+      console.log('GAME OVER: Colisión detectada al generar nueva pieza')
+    } else {
+      setPiezaActual(nuevaActual)
+      setPiezasSiguientes(nuevasSiguientes)
+    }
   }
 
   //  una función de devuelve verdadero o falso si existen coincidencia de casillas solidas en el panel para las posiciones de piezaActual o, por el contrario, se puede pintar la pieza.
@@ -89,14 +122,18 @@ const hayColisionHorizontal = (filaPieza, colPieza, matrizPieza, arrayCasillas, 
 
       let ladoSolido = -1;
 
+      // Bloque para obtener, si hay, el LADO SOLIDO mas cercano en la fila donde esta la pieza
       if (direction === 'left') {
         // Encontrar el elemento sólido más a la izquierda en esta fila de la pieza
         for (let colIndex = 0; colIndex < matrizPieza[filaIndex].length; colIndex++) {
+          
+          // si es mayor a 0, hay solido
           if (matrizPieza[filaIndex][colIndex] > 0) {
             ladoSolido = colIndex;
             break;
           }
         }
+
       } else {
         // Encontrar el elemento sólido más a la derecha en esta fila de la pieza
         for (let colIndex = matrizPieza[filaIndex].length - 1; colIndex >= 0; colIndex--) {
@@ -106,6 +143,7 @@ const hayColisionHorizontal = (filaPieza, colPieza, matrizPieza, arrayCasillas, 
           }
         }
       }
+
 
       // Si encontramos un sólido en esta fila
       if (ladoSolido !== -1) {
@@ -185,6 +223,7 @@ const hayColisionHorizontal = (filaPieza, colPieza, matrizPieza, arrayCasillas, 
         }
 
       }
+      insertarNuevaPieza()
       return prevPieza
     })
   }
@@ -225,25 +264,70 @@ const bajar = () => {
   });
 };
 
+
+// funcion que borra toda la fila de arrayCasillas, pasada por parametro
+const borrarFila = (fila) => {
+  const copiaCasillas = arrayCasillas.matriz
+
+  // Eliminar la fila completa
+  copiaCasillas.splice(fila, 1)
+
+  // Añadir una nueva fila vacía en la parte superior
+  copiaCasillas.unshift([1,0,0,0,0,0,0,0,0,0,0,1])
+
+  // Actualizar el estado de arrayCasillas
+  setArrayCasillas({...arrayCasillas, matriz: copiaCasillas})
+}
   
-  const controlTeclas = (event) => {
-    switch (event.key) {
-      case 'ArrowUp':
-        girarPieza()
-        break;
-      case 'ArrowDown':
-        bajar()
-        break;
-      case 'ArrowLeft':
-        moverIzq()
-        break;
-      case 'ArrowRight':
-        moverDra()
-        break;
-      default:
-        break;
-    }
+const controlTeclas = (event) => {
+  switch (event.key) {
+    case 'ArrowUp':
+      girarPieza()
+      break;
+    case 'ArrowDown':
+      bajar()
+      break;
+    case 'ArrowLeft':
+      moverIzq()
+      break;
+    case 'ArrowRight':
+      moverDra()
+      break;
+    default:
+      break;
   }
+}
+
+
+  // funcion que me retorna la fila, con valores > 0
+  const hayFilaCompleta = () => {
+    const copiaCasillas = arrayCasillas.matriz;
+
+    for (let i = 1; i < copiaCasillas.length - 1; i++) {
+        // comprobar si en cada celda de la fila el valor es mayor a 0
+        if (copiaCasillas[i].slice(1, 11).every(celda => celda > 0)) { //considerando bordes
+            return true; // retorna true si encuentra fila completa
+        }
+    }
+
+    return false; // retorna  falso si no encuentra fila completa
+};
+
+
+
+// crear 3 primeras piezas siguientes
+useEffect(() => {
+  if (!partidaEmpezada && piezasSiguientes.length === 0) {
+
+    // Generate initial 3 pieces for the queue
+    const initialPiezas = [];
+    for (let i = 0; i < 3; i++) {
+      let colRandom = Math.floor(Math.random() * 10) + 1
+      initialPiezas.push(nuevaPieza(0, colRandom));
+    }
+    setPiezasSiguientes(initialPiezas);
+  }
+}, [partidaEmpezada, piezasSiguientes]); 
 
  
   useEffect(() => {
@@ -257,44 +341,70 @@ const bajar = () => {
 
 
   useEffect(() => {
-    if (partidaEmpezada) {
+    if (partidaEmpezada && !gameOver) {
       pintarPieza()
+  
+      // Comprobar si hay fila completa y borrarla
+      if (hayFilaCompleta()) {
+        const filaCompleta = arrayCasillas.matriz.findIndex(fila => fila.every(celda => celda > 0));
+        
+        // si hay fila completa, se borra y se incrementa lineas. Si las lineas son de 5 en 5, incrementar nivel
+        if (filaCompleta !== -1) {
+          borrarFila(filaCompleta);
+          
+          setLineas((linea) => {
+            const nuevasLineas = linea + 1;
+            if (nuevasLineas % 5 === 0) {
+              setNivel((nivel) => nivel + 1);
+              setVelocidad((velocidad) => velocidad - 200)
+            }
+            return nuevasLineas;
+          });
+
+        }
+      }
       
-      if (piezaActual.fila + piezaActual.matriz.length < 21 ) {
+      if (piezaActual.fila + piezaActual.matriz.length < 21) {
         const intervalID = setInterval(() => {
           bajar()
-        }, 1000)
+        }, velocidad)
         
         return () => {
           clearInterval(intervalID)
         }
       } else {
         setPuntos((pts) => pts + 50)
-        // setPartidaEmpezada(false)
-
-
         insertarNuevaPieza()
       }
+
+
+      // si hay game over parar juego y mostrar mensaje
+    } else if (gameOver) {
+      setPartidaEmpezada(false)
+      console.log("GAME OVER: No se pueden insertar mas piezas.")
+
     }
-  }, [piezaActual, partidaEmpezada])
+  }, [piezaActual, partidaEmpezada, gameOver, piezasSiguientes])
+  
 
   return (
     <section className="vista-juego p-2">
       {/* mostrar cuando la pieza llega al suelo */}
-      {!partidaEmpezada && puntos > 0 && (
+      {!partidaEmpezada && puntos > 0 && gameOver && (
         <>
-          <div className="p-2 text-white text-center">
-            {/* <button type="button" className="btn btn-dark" data-bs-toggle="modal" onClick={}>GUARDAR PARTIDA</button> */}
+          <div className="p-2 text-white text-center bg-dark bg-opacity-50 rounded p-3 my-3">
+            <h4>La partida ha terminado!</h4>
+            <p>Ya no pueden aparecer mas piezas.</p>
             <button type="button" className="btn btn-dark" data-bs-toggle="modal" data-bs-target="#exampleModal">
               GUARDAR PARTIDA
             </button>
 
           </div>
-          <VentanaModal data={data} setData={setData} puntuacion={puntos} />
+          <VentanaModal data={data} setData={setData} puntuacion={puntos} setArrayCasillas={setArrayCasillas}/>
         </>
       )}
 
-      <div className="d-flex gap-5 text-white mx-auto p-2" style={{maxWidth: "80rem", fontSize: "1.75rem", width: "100%"}}>
+      <div className="d-flex gap-5 text-white mx-auto p-2 mt-2" style={{maxWidth: "80rem", fontSize: "1.75rem", width: "100%"}}>
         <section className="d-flex flex-column justify-content-between">
           <div className="rounded p-4 text-center border bg-black bg-opacity-50">Guardado</div>
           <div className="rounded p-4 border d-flex flex-column align-items-center justify-content-center bg-black bg-opacity-50">
@@ -304,7 +414,7 @@ const bajar = () => {
           <div className="rounded p-4 d-flex flex-column gap-2 border bg-black bg-opacity-50">
             <div className="d-flex flex-column align-items-center justify-content-center">
               <p>Nivel</p>
-              <span>1</span>
+              <span>{nivel}</span>
             </div>
             <hr />
             <div className="d-flex flex-column align-items-center justify-content-center">
@@ -314,12 +424,12 @@ const bajar = () => {
             <hr />
             <div className="d-flex flex-column align-items-center justify-content-center">
               <p>Lineas</p>
-              <span>0</span>
+              <span>{lineas}</span>
             </div>
           </div>
         </section>
 
-        <div id="juego-container" className="rounded bg-dark bg-opacity-50">
+        <div id="juego-container" className="rounded ">
           <Panel modelos={arrayCasillas.matriz}/>
         </div>
         
@@ -333,6 +443,16 @@ const bajar = () => {
             <button className="mt-3 btn btn-warning" onClick={() => insertarNuevaPieza()}>
               Insertar pieza
             </button>
+          </div>
+          {/* piezas siguientes */}
+          <div className="mt-2">
+            <div className="mt-5">
+              {piezasSiguientes.map((pieza, index) => (
+                <div className="p-4" key={index}>
+                  <Pieza matriz={pieza.matriz}/>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
       </div>

@@ -11,9 +11,10 @@ export default function Pieza({matriz}) {
               {fila.map((celda, index) => (
                 <div 
                   key={index} 
+                  id="celdas"
                   className={`col border border-dark ${colorPieza(celda)}`}
                 >
-                  {celda}
+                  {/* {celda} */}
                 </div>
               ))}
             </div>
