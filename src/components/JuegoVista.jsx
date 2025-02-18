@@ -122,7 +122,8 @@ const hayColisionHorizontal = (filaPieza, colPieza, matrizPieza, arrayCasillas, 
 
       let ladoSolido = -1;
 
-      // Bloque para obtener, si hay, el LADO SOLIDO mas cercano en la fila donde esta la pieza
+      // Bloque para obtener, si hay, el LADO SOLIDO mas cercano en la fila donde esta la pieza.
+      //ladoSolido indicara el indice del bloque solido mas a la izquierda 
       if (direction === 'left') {
         // Encontrar el elemento sólido más a la izquierda en esta fila de la pieza
         for (let colIndex = 0; colIndex < matrizPieza[filaIndex].length; colIndex++) {
@@ -143,6 +144,7 @@ const hayColisionHorizontal = (filaPieza, colPieza, matrizPieza, arrayCasillas, 
           }
         }
       }
+
 
 
       // Si encontramos un sólido en esta fila
@@ -439,10 +441,10 @@ useEffect(() => {
           </div>
           <div className="border rounded p-2 d-flex flex-column gap-2">
             <button className="btn btn-success" onClick={() => setPartidaEmpezada(true)}>JUGAR</button>
-            <button className="btn btn-info">PAUSA</button>
-            <button className="mt-3 btn btn-warning" onClick={() => insertarNuevaPieza()}>
+            <button className="btn btn-info" onClick={() => setPartidaEmpezada(false)}>PAUSA</button>
+            {/* <button className="mt-3 btn btn-warning" onClick={() => insertarNuevaPieza()}>
               Insertar pieza
-            </button>
+            </button> */}
           </div>
           {/* piezas siguientes */}
           <div className="mt-2">

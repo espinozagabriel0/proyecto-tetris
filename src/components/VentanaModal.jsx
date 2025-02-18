@@ -3,13 +3,13 @@ import {useNavigate } from "react-router-dom"
 import { modelos } from "../lib/modelos"
 import { PartidaContext } from "../context/PartidaContext"
 
-export default function VentanaModal({data, setData, puntuacion}) {
+export default function VentanaModal({data, setData, puntuacion, setArrayCasillas}) {
 
     const [avatar, setAvatar] = useState('')
     const [nick, setNick] = useState('')
-    const [fecha, setFecha] = useState('')
+    const [fecha, setFecha] = useState(new Date())
 
-    const {setArrayCasillas} = useContext(PartidaContext)
+    // const {setArrayCasillas} = useContext(PartidaContext)
     const navigate = useNavigate()
 
     const añadirPartida = (e) => {
@@ -29,10 +29,14 @@ export default function VentanaModal({data, setData, puntuacion}) {
             limpiarInputs()
 
             // setArrayCasillas(modelos)
+            // setArrayCasillas({matriz: modelos.matriz})
+            
             // redirigir a vista partidas
             navigate('/partidas')
         }
     }
+
+    console.log(fecha)
 
     const limpiarInputs = () => {
         setAvatar("")
