@@ -8,8 +8,7 @@ import VentanaModal from "./VentanaModal";
 import { PartidaContext } from "../context/PartidaContext"
 
 export default function JuegoVista() {
-  const [arrayCasillas, setArrayCasillas] = useState(modelos)
-  
+  // const [arrayCasillas, setArrayCasillas] = useState(modelos)
   const piezaInicial = nuevaPieza(0, Math.floor(Math.random() * 10) + 1)
   const [piezaActual, setPiezaActual] = useState(piezaInicial)
   const [partidaEmpezada, setPartidaEmpezada] = useState(false) 
@@ -24,7 +23,7 @@ export default function JuegoVista() {
   const [velocidad, setVelocidad] = useState(1000)
 
 
-  const {data, setData} = useContext(PartidaContext)
+  const {data, setData, arrayCasillas, setArrayCasillas} = useContext(PartidaContext)
 
   // Función para comprobar si una pieza puede colocarse en una columna
   const canSetPieza = (col, lengthPieza) => {
@@ -122,7 +121,8 @@ const hayColisionHorizontal = (filaPieza, colPieza, matrizPieza, arrayCasillas, 
 
       let ladoSolido = -1;
 
-      // Bloque para obtener, si hay, el LADO SOLIDO mas cercano en la fila donde esta la pieza
+      // Bloque para obtener, si hay, el LADO SOLIDO mas cercano en la fila donde esta la pieza.
+      //ladoSolido indicara el indice del bloque solido mas a la izquierda 
       if (direction === 'left') {
         // Encontrar el elemento sólido más a la izquierda en esta fila de la pieza
         for (let colIndex = 0; colIndex < matrizPieza[filaIndex].length; colIndex++) {
@@ -143,6 +143,7 @@ const hayColisionHorizontal = (filaPieza, colPieza, matrizPieza, arrayCasillas, 
           }
         }
       }
+
 
 
       // Si encontramos un sólido en esta fila
@@ -223,7 +224,7 @@ const hayColisionHorizontal = (filaPieza, colPieza, matrizPieza, arrayCasillas, 
         }
 
       }
-      insertarNuevaPieza()
+      // insertarNuevaPieza()
       return prevPieza
     })
   }
@@ -313,8 +314,6 @@ const controlTeclas = (event) => {
     return false; // retorna  falso si no encuentra fila completa
 };
 
-
-
 // crear 3 primeras piezas siguientes
 useEffect(() => {
   if (!partidaEmpezada && piezasSiguientes.length === 0) {
@@ -400,7 +399,7 @@ useEffect(() => {
             </button>
 
           </div>
-          <VentanaModal data={data} setData={setData} puntuacion={puntos} setArrayCasillas={setArrayCasillas}/>
+          <VentanaModal data={data} setData={setData} puntuacion={puntos} setArrayCasillas={setArrayCasillas} />
         </>
       )}
 
@@ -439,10 +438,7 @@ useEffect(() => {
           </div>
           <div className="border rounded p-2 d-flex flex-column gap-2">
             <button className="btn btn-success" onClick={() => setPartidaEmpezada(true)}>JUGAR</button>
-            <button className="btn btn-info">PAUSA</button>
-            <button className="mt-3 btn btn-warning" onClick={() => insertarNuevaPieza()}>
-              Insertar pieza
-            </button>
+            <button className="btn btn-info" onClick={() => setPartidaEmpezada(false)}>PAUSA</button>
           </div>
           {/* piezas siguientes */}
           <div className="mt-2">

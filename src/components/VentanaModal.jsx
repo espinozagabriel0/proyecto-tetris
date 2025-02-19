@@ -1,20 +1,21 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import {useNavigate } from "react-router-dom"
 import { modelos } from "../lib/modelos"
 import { PartidaContext } from "../context/PartidaContext"
 
-export default function VentanaModal({data, setData, puntuacion}) {
+export default function VentanaModal({data, setData, puntuacion, setArrayCasillas}) {
 
     const [avatar, setAvatar] = useState('')
     const [nick, setNick] = useState('')
-    const [fecha, setFecha] = useState('')
+    const [fecha, setFecha] = useState(new Date().toISOString().split('T')[0])
 
-    const {setArrayCasillas} = useContext(PartidaContext)
+    const {reiniciarJuego} = useContext(PartidaContext)
+
     const navigate = useNavigate()
 
     const añadirPartida = (e) => {
         e.preventDefault()
-
+        
         if (avatar && fecha && nick) {
             //añadir la partida al array con setData
             const nuevaPartida = {
@@ -24,11 +25,12 @@ export default function VentanaModal({data, setData, puntuacion}) {
                 puntos: puntuacion, 
                 fecha: fecha
             }
+            // setear state arraycasillas a inicial
+            reiniciarJuego()
+            
             setData([...data, nuevaPartida])
-    
             limpiarInputs()
 
-            // setArrayCasillas(modelos)
             // redirigir a vista partidas
             navigate('/partidas')
         }
@@ -65,8 +67,8 @@ export default function VentanaModal({data, setData, puntuacion}) {
                         </div>
                         <div className="mb-3">
                             <label htmlFor="fecha" className="col-form-label">Fecha:</label>
-                            <input type="date" className="form-control" id="fecha" onChange={(e) => setFecha(e.target.value)} value={fecha} required/>
-                            {/* <input type="date" className="form-control" id="fecha" value={fecha}/> */}
+                            {/* <input type="date" className="form-control" id="fecha" onChange={(e) => setFecha(e.target.value)} value={fecha} required/> */}
+                            <input type="date" className="form-control" id="fecha" value={fecha}/>
                         </div>
                     </form>
                 </div>
