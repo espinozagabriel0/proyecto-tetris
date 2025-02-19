@@ -1,8 +1,10 @@
 import { createContext, useState } from "react"
+import { modelos } from "../lib/modelos"
 
 const PartidaContext = createContext()
 
 const PartidaProvider = ({children}) =>  {
+    const [arrayCasillas, setArrayCasillas] = useState(modelos)
 
     const [data, setData] = useState([
         {id: 1, avatar: "🦊", nick: "FoxPlayer", puntos: 1500, fecha: "2024-11-30"},
@@ -22,9 +24,39 @@ const PartidaProvider = ({children}) =>  {
         return `${date.getDate()} de ${meses[date.getMonth()]} ${date.getFullYear()}`
     }
 
+    const reiniciarJuego = () => {
+      const matrizLimpia =  [
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,0,0,0,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1,1,1,1]
+      ]
+      // Reset game state
+      setArrayCasillas({matriz: matrizLimpia})
+    }
+    
+    
 
     return (
-        <PartidaContext.Provider value={{data, setData, formatFecha}}>
+        <PartidaContext.Provider value={{data, setData, formatFecha, arrayCasillas, setArrayCasillas, reiniciarJuego}}>
             {children}
         </PartidaContext.Provider>
     )

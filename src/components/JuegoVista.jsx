@@ -8,8 +8,7 @@ import VentanaModal from "./VentanaModal";
 import { PartidaContext } from "../context/PartidaContext"
 
 export default function JuegoVista() {
-  const [arrayCasillas, setArrayCasillas] = useState(modelos)
-  
+  // const [arrayCasillas, setArrayCasillas] = useState(modelos)
   const piezaInicial = nuevaPieza(0, Math.floor(Math.random() * 10) + 1)
   const [piezaActual, setPiezaActual] = useState(piezaInicial)
   const [partidaEmpezada, setPartidaEmpezada] = useState(false) 
@@ -24,7 +23,7 @@ export default function JuegoVista() {
   const [velocidad, setVelocidad] = useState(1000)
 
 
-  const {data, setData} = useContext(PartidaContext)
+  const {data, setData, arrayCasillas, setArrayCasillas} = useContext(PartidaContext)
 
   // Función para comprobar si una pieza puede colocarse en una columna
   const canSetPieza = (col, lengthPieza) => {
@@ -225,7 +224,7 @@ const hayColisionHorizontal = (filaPieza, colPieza, matrizPieza, arrayCasillas, 
         }
 
       }
-      insertarNuevaPieza()
+      // insertarNuevaPieza()
       return prevPieza
     })
   }
@@ -315,8 +314,6 @@ const controlTeclas = (event) => {
     return false; // retorna  falso si no encuentra fila completa
 };
 
-
-
 // crear 3 primeras piezas siguientes
 useEffect(() => {
   if (!partidaEmpezada && piezasSiguientes.length === 0) {
@@ -402,7 +399,7 @@ useEffect(() => {
             </button>
 
           </div>
-          <VentanaModal data={data} setData={setData} puntuacion={puntos} setArrayCasillas={setArrayCasillas}/>
+          <VentanaModal data={data} setData={setData} puntuacion={puntos} setArrayCasillas={setArrayCasillas} />
         </>
       )}
 
@@ -442,9 +439,6 @@ useEffect(() => {
           <div className="border rounded p-2 d-flex flex-column gap-2">
             <button className="btn btn-success" onClick={() => setPartidaEmpezada(true)}>JUGAR</button>
             <button className="btn btn-info" onClick={() => setPartidaEmpezada(false)}>PAUSA</button>
-            {/* <button className="mt-3 btn btn-warning" onClick={() => insertarNuevaPieza()}>
-              Insertar pieza
-            </button> */}
           </div>
           {/* piezas siguientes */}
           <div className="mt-2">
